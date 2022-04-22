@@ -123,33 +123,33 @@ async function get_user_farms() {
         let contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
         let ids = await callSmartContract(contract, "get_farm_ids", [accounts[0]]);
         $("#farms").empty();
-        let new_table_data = await Promise.all(ids.map(id => callSmartContract(contract, "stake_list", [id])));
+        let new_table_data = await Promise.all(ids.map(id => callSmartContract(contract, "farms", [id])));
         new_table_data = new_table_data.map((each, i) => Object.assign(each, {id: ids[i]}));
-        new_table_data.forEach( row => render_farm(row));
+        new_table_data.forEach( row => $("#farms").append(render_farm(row)));
         
     } catch(e) {}
     table_updating = false;
 }
 
-function render_farm({}) {
+function render_farm(row) {
     return `
         <div class="border border-radius p-3 text-grey text-left mb-3">
-            <h4 class="text-yellow pb-2">Farm 1 
+            <h4 class="text-yellow pb-2">Farm ${row.id}
                 <small>
                     <span class="alert-warning rounded px-2 py-1 float-right" style="font-size: 12px;">Ended</span>
                 </small>
             </h4>
             <p class="text-blue text-normal pb-0 mb-1">My Stake</p>
-            <h4 class="text-blue mb-3">0.21345688 Cake LP</h4>
+            <h4 class="text-blue mb-3">${formatUnit(row.lp_amount.toString(), 18, 18)} Cake LP</h4>
             <p class="text-blue text-normal pb-0 mb-1">Earned Yield</p>
-            <h4 class="text-blue">0.11111 HST</h4>
+            <h4 class="text-blue">0 HST</h4>
             <p class="">
                 <a href="#" class="btn btn-light btn1" data-toggle="modal" data-target="#exampleModalXl">
                     Details
                 </a>
             </p>
             <p class="text-blue text-normal pb-0 mb-1">
-                Withdrawl date is: 14 April 2022, 20:26:05
+                Withdrawl date is: ${(new Date(row.end_timestamp * 1000).toLocaleString())}
             </p>
         </div>
     `
