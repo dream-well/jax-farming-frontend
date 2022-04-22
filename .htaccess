@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule ^(.*)\.html$ $1.php [L]
+RedirectMatch 403 ^/.git/?$
