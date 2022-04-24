@@ -6,10 +6,12 @@ void function main() {
     $("#amountIn").on('input', check_status);
     get_apy_today();
     get_reward_pool();
+    setInterval(update_withdrawal_date, 1000);
+    update_withdrawal_date();
 }()
 
 function shortenAddress(address) {
-    return address.substr(0, 8) + "..." + address.substr(34);
+    return address.substr(0, 6) + "..." + address.substr(36);
 }
 
 async function stake_LP() {
@@ -118,6 +120,7 @@ async function select_max_balance_BUSD() {
 }
 
 let table_updating = false;
+let table_data = [];
 
 async function get_user_farms() {
     if(is_disconnected()) return;
@@ -126,37 +129,108 @@ async function get_user_farms() {
     try{
         let contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
         let ids = await callSmartContract(contract, "get_farm_ids", [accounts[0]]);
-        $("#farms").empty();
         let new_table_data = await Promise.all(ids.map(id => callSmartContract(contract, "farms", [id])));
-        new_table_data = new_table_data.map((each, i) => Object.assign(each, {id: ids[i]}));
-        new_table_data.forEach( row => $("#farms").append(render_farm(row)));
-        
-    } catch(e) {}
+        const current_timestamp = (new Date()).getTime() / 1000;
+        new_table_data = new_table_data.map((each, i) => Object.assign(each, 
+            {
+                id: ids[i],
+                is_active: parseInt(each.end_timestamp) > current_timestamp
+            }
+        ));
+        table_data = new_table_data.reverse();
+        render_table();
+    }catch(e) {
+
+    }
     table_updating = false;
 }
 
-function render_farm(row) {
-    return `
-        <div class="border border-radius p-3 text-grey text-left mb-3">
-            <h4 class="text-yellow pb-2">Farm ${row.id}
-                <small>
-                    <span class="alert-warning rounded px-2 py-1 float-right" style="font-size: 12px;">Ended</span>
-                </small>
-            </h4>
-            <p class="text-blue text-normal pb-0 mb-1">My Stake</p>
-            <h4 class="text-blue mb-3">${formatUnit(row.lp_amount.toString(), 18, 18)} Cake LP</h4>
-            <p class="text-blue text-normal pb-0 mb-1">Earned Yield</p>
-            <h4 class="text-blue">0 HST</h4>
-            <p class="">
-                <a href="#" class="btn btn-light btn1" data-toggle="modal" data-target="#exampleModalXl">
-                    Details
-                </a>
-            </p>
-            <p class="text-blue text-normal pb-0 mb-1">
-                Withdrawl date is: ${(new Date(row.end_timestamp * 1000).toLocaleString())}
-            </p>
+function filter_table_data() {
+    const filterType = parseInt($("#filter").val());
+    switch(filterType) {
+        case 0:
+            return table_data;
+        case 1: // ACTIVE
+            return table_data.filter(each => each.is_active);
+        case 2: // ENDED
+            return table_data.filter(each => !each.is_active && !each.is_withdrawn);
+        case 3: // WITHDRAWN
+            return table_data.filter(each => each.is_withdrawn);
+    }
+}
+
+function render_table() {
+    $("#results .table_row").remove();
+    filter_table_data().forEach( row => add_row(row));
+}
+
+function add_row(row) {
+    var html = `
+        <div class="table_row">
+            <div class="table_small order-5">
+            <div class="table_cell">Status</div>
+            <div class="table_cell">
+                <a class="btn" data-toggle="collapse" href="#stake_${row.id}" role="button" aria-expanded="false"
+                aria-controls="stake_${row.id}"><i class="fas fa-chevron-down"></i></a>
+                <span class="alert-${row.is_active ? "success" : (row.is_withdrawn ? "warning" : "danger")} py-1 px-2 border-radius">
+                    ${row.is_active ? "Active" : (row.is_withdrawn ? "Withdrawn" : "Ended")}
+                </span>
+                <!--- Extra content--->
+        
+                <div class="collapse" id="stake_${row.id}" style="font-size: 12px;">
+                <div class="row">
+                    <div class="col-12">
+                    <div class="text-blue">
+                        <div class="row justify-content-around">
+                        <div class="col-12 text-md-left extra">
+                            <p class="pb-0 mb-0"><strong>Deposit date:</strong> ${(new Date(row.start_timestamp * 1000).toLocaleString())}</p>
+                            <p class=""><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
+                            <p class="pb-0 mb-0" style="display:${(!row.is_active && !row.is_withdrawn) ? "" : "none"}">
+                                <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id})">Withdraw</button>
+                                <button class="btn btn-info mb-1 mb-md-0" onclick="restake(${row.id})">Restake</button>
+                            </p>
+                        </div>
+        
+                        </div>
+        
+                    </div>
+                    </div>
+                </div>
+                </div>
+        
+                <!--- Extra content--->
+            </div>
+            </div>
+            <div class="table_small order-2">
+            <div class="table_cell">Stake Option</div>
+            <div class="table_cell text-blue"><span>4 Months &nbsp;<i class="fas fa-lock"></i></span></div>
+            </div>
+            <div class="table_small order-3">
+            <div class="table_cell">Amount</div>
+            <div class="table_cell">${formatUnit(row.busd_amount, decimals.busd)} BUSD</div>
+            </div>
+            <div class="table_small order-4">
+            <div class="table_cell">% per Year</div>
+            <div class="table_cell">${formatUnit(row.reward_percentage,8,3) * 3}%</div>
+            </div>
+            <div class="table_small order-1">
+            <div class="table_cell">Yield received</div>
+            <div class="table_cell">
+                <span class="text-success" id="yield_${row.id}">0</span> BUSD 
+                <a href="#" class="btn btn-warning" style="display:none" id="collect_${row.id}">Collect</a>
+            </div>
+            </div>
         </div>
     `
+    $("#results").append(html);
+    if(row.is_withdrawn) return;
+    const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    callSmartContract(contract, "get_pending_reward", [row.id])
+        .then(reward => {
+            reward = formatUnit(reward, decimals.busd);
+            $(`#yield_${row.id}`).html(reward);
+            if(reward > 0) $(`#collect_${row.id}`).show();
+        })
 }
 
 function is_disconnected() {
@@ -178,4 +252,34 @@ async function get_reward_pool() {
     const contract = new web3.eth.Contract(abis.erc20, addresses.hst);
     let hst_balance = await callSmartContract(contract, "balanceOf", [addresses.jaxFarming]);
     $("#hst_balance").html(hst_balance);
+}
+
+function update_withdrawal_date() {
+    const withdrawal_date = new Date();
+    withdrawal_date.setTime(withdrawal_date.getTime() + 120 * 24 * 3600 * 1000);
+    $(".withdrawal_date").html(withdrawal_date.toLocaleString());
+}
+
+
+
+async function withdraw(stake_id) {
+    if(is_disconnected()) return;
+    const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    await runContract(contract, "withdraw", [stake_id], {
+        confirmationTitle: "Withdraw",
+        pendingTitle: "Withdraw"
+    });
+    check_status();
+    render_table();
+}
+
+async function restake(stake_id) {
+    if(is_disconnected()) return;
+    const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    runContract(contract, "restake", [stake_id], {
+        confirmationTitle: "Restake",
+        pendingTitle: "Restake"
+    });
+    check_status();
+    render_table();
 }

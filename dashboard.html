@@ -51,8 +51,8 @@
     <!--3boxes with icons end-->
     <section class="py-5">
       <div class="container">
-        <div class="row mb-5 d-flex">
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+        <div class="row mb-5 flex flex-row">
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
                 <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool amount</small></p>
@@ -60,7 +60,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
                 <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward percentage</small></p>
@@ -68,7 +68,15 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+          <div class="col-12 col-md mb-3 mb-md-0">
+            <div class="bg-white border-radius p-3 box-shadow h-100">
+              <div class="text-center">
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Total Stake</small></p>
+                <p class="text-blue pb-0 mb-0 font-weight-bold" id="total_stake">$1,000,000</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
                 <p class="pb-0 mb-0 text-lightblue"><small>Contract</small></p>
@@ -81,7 +89,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="alert-success border-radius p-3 box-shadow h-100">
               <div class="text-center">
                 <p class="pb-0 mb-0 text-success"><small>Status</small></p>
@@ -107,14 +115,13 @@
                     </div>
                   </div>
                 </div>
-                <p class="text-muted"><small>Min 500 BUSD to 50000 BUSD</small></p>
                 <div class="bg-light border-radius p-3 text-grey text-left mb-3">
                   <div class="d-flex">
                     <div class="my-auto mr-3"><i class="fas fa-unlock"></i></div>
                     <div>
                       <h5 class="pb-0 mb-0">Min Locking Period: 120 days</h5>
                       <p class="pb-0 mb-0"><small>Your Withdrawl date is: <br>
-                          14 April 2022, 20:26:05</small></p>
+                          <span class="withdrawal_date"></span></small></p>
                     </div>
                   </div>
                 </div>
@@ -149,14 +156,13 @@
                     </div>
                   </div>
                 </div>
-                <p class="text-muted"><small>Min 500 LP Tokens to 50000 LP Tokens</small></p>
                 <div class="bg-light border-radius p-3 text-grey text-left mb-3">
                   <div class="d-flex">
                     <div class="my-auto mr-3"><i class="fas fa-unlock"></i></div>
                     <div>
                       <h5 class="pb-0 mb-0">Min Locking Period: 120 days</h5>
                       <p class="pb-0 mb-0"><small>Your Withdrawl date is: <br>
-                          14 April 2022, 20:26:05</small></p>
+                          <span class="withdrawal_date"></span></small></p>
                     </div>
                   </div>
                 </div>
@@ -182,10 +188,11 @@
               <div class="form-row align-items-center text-blue">
                 <div class="col-auto my-1">
                   <label class="mr-sm-2" for="inlineFormCustomSelect">Search By</label>
-                  <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                    <option selected>Choose...</option>
-                    <option>Active</option>
-                    <option value="1">Ended</option>
+                  <select class="custom-select mr-sm-2" id="filter" onchange="render_table()">
+                    <option value="0" selected>All</option>
+                    <option value="1">Active</option>
+                    <option value="2">Ended</option>
+                    <option value="3">Withdrawn</option>
                   </select>
                 </div>
 
@@ -196,170 +203,8 @@
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Status</div>
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Stake Option</div>
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Amount</div>
-                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">% per Year</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">APY</div>
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Yield received</div>
-              </div>
-              <div class="table_row">
-                <div class="table_small order-5">
-                  <div class="table_cell">Status</div>
-                  <div class="table_cell">
-                    <a class="btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-                      aria-controls="collapseExample"><i class="fas fa-chevron-down"></i></a>
-                    <span class="alert-success py-1 px-2 border-radius">Active</span>
-
-
-
-                    <!--- Extra content--->
-
-                    <div class="collapse" id="collapseExample" style="font-size: 12px;">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="text-blue">
-                            <div class="row justify-content-around">
-                              <div class="col-12 text-md-left extra">
-                                <p class="pb-0 mb-0 pt-2"><strong>Deposit type:</strong> Locked for 3 months</p>
-                                <p class="pb-0 mb-0"><strong>Deposit date:</strong> April 14, 2022</p>
-                                <p class="pb-0 mb-0"><strong>Withdrawal block #:</strong>6483749804</p>
-                                <p class=""><strong>Withdrawal date:</strong> July 14, 2022</p>
-                                <p class="pb-0 mb-0"><a href="#" class="btn btn-info disabled mb-1 mb-md-0">Withdraw</a>
-                                  <a href="#" class="btn btn-info disabled mb-1 mb-md-0">Restake</a></p>
-                              </div>
-
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!--- Extra content--->
-
-
-
-
-                  </div>
-                </div>
-                <div class="table_small order-2">
-                  <div class="table_cell">Stake Option</div>
-                  <div class="table_cell text-blue"><span>6 Months <i class="fas fa-lock"></i></span></div>
-                </div>
-                <div class="table_small order-3">
-                  <div class="table_cell">Amount</div>
-                  <div class="table_cell">0,00000000 BUSD</div>
-                </div>
-                <div class="table_small order-4">
-                  <div class="table_cell">% per Year</div>
-                  <div class="table_cell">14%</div>
-                </div>
-                <div class="table_small order-1">
-                  <div class="table_cell">Yield received</div>
-                  <div class="table_cell"><span class="text-success">0.00000000</span> BUSD <a href="#"
-                      class="btn btn-warning">Collect</a></div>
-                </div>
-              </div>
-
-              <div class="table_row">
-                <div class="table_small order-5">
-                  <div class="table_cell">Status</div>
-                  <div class="table_cell">
-                    <a class="btn" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false"
-                      aria-controls="collapseExample1"><i class="fas fa-chevron-down"></i></a>
-                    <span class="alert-success py-1 px-2 border-radius">Active</span>
-
-                    <!--- Extra content--->
-
-                    <div class="collapse" id="collapseExample1" style="font-size: 12px;">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="text-blue">
-                            <div class="row justify-content-around">
-                              <div class="col-12 text-md-left extra">
-                                <p class="pb-0 mb-0 pt-2"><strong>Deposit type:</strong> Locked for 3 months</p>
-                                <p class="pb-0 mb-0"><strong>Deposit date:</strong> April 14, 2022</p>
-                                <p class="pb-0 mb-0"><strong>Withdrawal block #:</strong>6483749804</p>
-                                <p class=""><strong>Withdrawal date:</strong> July 14, 2022</p>
-                                <p class="pb-0 mb-0"><a href="#" class="btn btn-info disabled mb-1 mb-md-0">Withdraw</a>
-                                  <a href="#" class="btn btn-info disabled mb-1 mb-md-0">Restake</a></p>
-                              </div>
-
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!--- Extra content--->
-                  </div>
-                </div>
-                <div class="table_small order-2">
-                  <div class="table_cell">Stake Option</div>
-                  <div class="table_cell text-blue"><span>6 Months <i class="fas fa-lock"></i></span></div>
-                </div>
-                <div class="table_small order-3">
-                  <div class="table_cell">Amount</div>
-                  <div class="table_cell">0,00000000 BUSD</div>
-                </div>
-                <div class="table_small order-4">
-                  <div class="table_cell">% per Year</div>
-                  <div class="table_cell">14%</div>
-                </div>
-                <div class="table_small order-1">
-                  <div class="table_cell">Yield received</div>
-                  <div class="table_cell"><span class="text-success">0.00000000</span> BUSD <a href="#"
-                      class="btn btn-warning">Collect</a></div>
-                </div>
-              </div>
-              <div class="table_row">
-                <div class="table_small order-5">
-                  <div class="table_cell">Status</div>
-                  <div class="table_cell">
-                    <a class="btn" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false"
-                      aria-controls="collapseExample2"><i class="fas fa-chevron-down"></i></a>
-                    <span class="alert-danger py-1 px-2 border-radius">Ended</span>
-                    <!--- Extra content--->
-
-                    <div class="collapse" id="collapseExample2" style="font-size: 12px;">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="text-blue">
-                            <div class="row justify-content-around">
-                              <div class="col-12 text-md-left extra">
-                                <p class="pb-0 mb-0 pt-2"><strong>Deposit type:</strong> Locked for 3 months</p>
-                                <p class="pb-0 mb-0"><strong>Deposit date:</strong> April 14, 2022</p>
-                                <p class="pb-0 mb-0"><strong>Withdrawal block #:</strong>6483749804</p>
-                                <p class=""><strong>Withdrawal date:</strong> July 14, 2022</p>
-                                <p class="pb-0 mb-0"><a href="#" class="btn btn-info disabled mb-1 mb-md-0">Withdraw</a>
-                                  <a href="#" class="btn btn-info disabled mb-1 mb-md-0">Restake</a></p>
-                              </div>
-
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!--- Extra content--->
-                  </div>
-                </div>
-                <div class="table_small order-2">
-                  <div class="table_cell">Stake Option</div>
-                  <div class="table_cell text-blue"><span>6 Months <i class="fas fa-lock"></i></span></div>
-                </div>
-                <div class="table_small order-3">
-                  <div class="table_cell">Amount</div>
-                  <div class="table_cell">0,00000000 BUSD</div>
-                </div>
-                <div class="table_small order-4">
-                  <div class="table_cell">% per Year</div>
-                  <div class="table_cell">14%</div>
-                </div>
-                <div class="table_small order-1">
-                  <div class="table_cell">Yield received</div>
-                  <div class="table_cell"><span class="text-success">0.00000000</span> BUSD <a href="#"
-                      class="btn btn-warning">Collect</a></div>
-                </div>
               </div>
             </div>
 
