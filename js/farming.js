@@ -184,6 +184,8 @@ function add_row(row) {
                         <div class="row justify-content-around">
                         <div class="col-12 text-md-left extra">
                             <p class="pb-0 mb-0"><strong>Deposit date:</strong> ${(new Date(row.start_timestamp * 1000).toLocaleString())}</p>
+                            <p class="pb-0 mb-0"><strong>Lp token amount:</strong> ${formatUnit(row.lp_amount, 18, 8)}</p>
+                            <p class="pb-0 mb-0"><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd)} BUSD</p>
                             <p class=""><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
                             <p class="pb-0 mb-0" style="display:${(!row.is_active && !row.is_withdrawn) ? "" : "none"}">
                                 <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id})">Withdraw</button>
