@@ -1,7 +1,11 @@
+const RPC_URL = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+
 void function main() {
     $("#jaxfarm_address").html(addresses.jaxFarming);
     $("#contract_address").html(shortenAddress(addresses.jaxFarming));
     $("#amountIn").on('input', check_status);
+    get_apy_today();
+    get_reward_pool();
 }()
 
 function shortenAddress(address) {
@@ -159,4 +163,19 @@ function is_disconnected() {
     if(typeof accounts == "undefined") return true;
     if(accounts.length == 0) return true;
     return false;
+}
+
+async function get_apy_today() {
+    const web3 = new Web3(RPC_URL);
+    const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    let apy = await callSmartContract(contract, "get_apy_today", []);
+    apy = formatUnit(apy, 8);
+    $("#apy_today").html(apy + "%");
+}
+
+async function get_reward_pool() {
+    const web3 = new Web3(RPC_URL);
+    const contract = new web3.eth.Contract(abis.erc20, addresses.hst);
+    let hst_balance = await callSmartContract(contract, "balanceOf", [addresses.jaxFarming]);
+    $("#hst_balance").html(hst_balance);
 }
