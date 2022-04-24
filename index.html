@@ -57,7 +57,7 @@
           <div class="bg-white border-radius p-3 box-shadow h-100">
             <div class="text-center">
               <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool amount</small></p>
-              <p class="text-blue pb-0 mb-0 font-weight-bold">10000000 HST</p>
+              <p class="text-blue pb-0 mb-0 font-weight-bold"><span id="hst_balance">-</span> HST</p>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
           <div class="bg-white border-radius p-3 box-shadow h-100">
             <div class="text-center">
               <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward percentage</small></p>
-              <p class="text-blue pb-0 mb-0 font-weight-bold">30%</p>
+              <p class="text-blue pb-0 mb-0 font-weight-bold" id="apy_today">-%</p>
             </div>
           </div>
         </div>
@@ -73,15 +73,20 @@
           <div class="bg-white border-radius p-3 box-shadow h-100">
             <div class="text-center">
               <p class="pb-0 mb-0 text-lightblue"><small>Contract</small></p>
-              <p class="pb-0 mb-0 font-weight-bold"><a href="#" class="text-blue">adasd4...dsa4 <i class="far fa-clone"></i></a></p>
+              <p class="pb-0 mb-0 font-weight-bold text-blue">
+                <span id="contract_address">&nbsp;</span>
+                <span style="display: none;" id="jaxfarm_address"></span>
+                &nbsp; 
+                <i class="far fa-clone copy_btn" data-id="jaxfarm_address"></i>
+              </p>
             </div>
           </div>
         </div>
         <div class="col-12 col-md-3 mb-3 mb-md-0">
-          <div class="alert-danger border-radius p-3 box-shadow h-100">
+          <div class="alert-success border-radius p-3 box-shadow h-100">
             <div class="text-center">
-              <p class="pb-0 mb-0 text-danger"><small>Status</small></p>
-              <p class="pb-0 mb-0 text-danger font-weight-bold">No Active</p>
+              <p class="pb-0 mb-0 text-success"><small>Status</small></p>
+              <p class="pb-0 mb-0 text-success font-weight-bold">Active</p>
             </div>
           </div>
         </div>
