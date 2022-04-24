@@ -71,8 +71,8 @@
           <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
-                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Total Stake</small></p>
-                <p class="text-blue pb-0 mb-0 font-weight-bold" id="total_stake">$1,000,000</p>
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Total Staked</small></p>
+                <p class="text-blue pb-0 mb-0 font-weight-bold" id="total_staked"></p>
               </div>
             </div>
           </div>
@@ -107,11 +107,11 @@
                 <div class="stakeamt bg-lighterblue border-radius p-3">
                   <p class="text-left text-blue pb-0 mb-0"><small>BUSD Balance: <span id="balance_BUSD">0</span></small></p>
                   <div class="row d-flex">
-                    <div class="col-9 col-md-6 mb-3 mb-md-0">
+                    <div class="col-9 col-md-10 mb-3 mb-md-0">
                       <input id="amount_BUSD" class="form-control enteramt form-control-lg w-100" type="text" placeholder="0.000"/>
                     </div>
-                    <div class="col-3 col-md-6 text-md-right text-center my-auto">
-                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;">Max</button>
+                    <div class="col-3 col-md-2 text-md-right text-center my-auto">
+                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;" onclick="select_max_balance_BUSD()">Max</button>
                     </div>
                   </div>
                 </div>
@@ -148,11 +148,11 @@
                 <div class="stakeamt bg-lighterblue border-radius p-3">
                   <p class="text-left text-blue pb-0 mb-0"><small>LP Token Balance: <span id="balance_LP"></span></small></p>
                   <div class="row d-flex">
-                    <div class="col-9 col-md-6 mb-3 mb-md-0">
+                    <div class="col-9 col-md-10 mb-3 mb-md-0">
                       <input id="amount_LP" class="form-control enteramt form-control-lg w-100" type="text" placeholder="0.000"/>
                     </div>
-                    <div class="col-3 col-md-6 text-md-right text-center my-auto">
-                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;">Max</button>
+                    <div class="col-3 col-md-2 text-md-right text-center my-auto">
+                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;" onclick="select_max_balance_LP()">Max</button>
                     </div>
                   </div>
                 </div>
@@ -201,10 +201,11 @@
             <div class="restable text-blue" id="results">
               <div class="theader">
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Status</div>
-                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Stake Option</div>
-                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Amount</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Lp token</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Amount in BUSD</div>
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">APY</div>
-                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Yield received</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Yield in BUSD</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Yield in HST (Estimated)</div>
               </div>
             </div>
 

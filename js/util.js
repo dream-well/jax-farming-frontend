@@ -8,8 +8,8 @@ function parseUnit(number, decimal = 18) {
 function formatUnit(number, decimal = 18, fractionDigits = 6) {
     if(typeof number != "string") number = "0";
     if(number.length <= decimal) number = "0".repeat(decimal + 1 - number.length) + number;
-    number = Number(number.substr(0, number.length - decimal) + "." + number.substr(number.length - decimal)).toFixed(fractionDigits);
-    return Number(number);
+    number = myFixed(Number(number.substr(0, number.length - decimal) + "." + number.substr(number.length - decimal)), fractionDigits);
+    return number;
 }
 
 function callSmartContract(contract, func, args = [], options) {
@@ -224,4 +224,9 @@ async function get_token_balance(token_name) {
     let token_info = tokens[token_name.toUpperCase()];
     return await get_balance(new web3.eth.Contract(erc20ABI, token_info.address), token_info.decimals);
 
+}
+
+function myFixed(x, d) {
+    if (!d) return x.toFixed(d); // don't go wrong if no decimal
+    return x.toFixed(d).replace(/\.?0+$/, '');
 }

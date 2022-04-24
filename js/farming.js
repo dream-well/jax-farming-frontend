@@ -1,4 +1,5 @@
 const RPC_URL = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+const states = {};
 
 void function main() {
     $("#jaxfarm_address").html(addresses.jaxFarming);
@@ -6,6 +7,7 @@ void function main() {
     $("#amountIn").on('input', check_status);
     get_apy_today();
     get_reward_pool();
+    get_total_staked();
     setInterval(update_withdrawal_date, 1000);
     update_withdrawal_date();
 }()
@@ -126,6 +128,7 @@ async function get_user_farms() {
     if(is_disconnected()) return;
     if(table_updating) return;
     table_updating = true;
+    get_wjxn_price();
     try{
         let contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
         let ids = await callSmartContract(contract, "get_farm_ids", [accounts[0]]);
@@ -184,8 +187,7 @@ function add_row(row) {
                         <div class="row justify-content-around">
                         <div class="col-12 text-md-left extra">
                             <p class="pb-0 mb-0"><strong>Deposit date:</strong> ${(new Date(row.start_timestamp * 1000).toLocaleString())}</p>
-                            <p class="pb-0 mb-0"><strong>Lp token amount:</strong> ${formatUnit(row.lp_amount, 18, 8)}</p>
-                            <p class="pb-0 mb-0"><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd)} BUSD</p>
+                            <p class="pb-0 mb-0"><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd, 2)} BUSD</p>
                             <p class=""><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
                             <p class="pb-0 mb-0" style="display:${(!row.is_active && !row.is_withdrawn) ? "" : "none"}">
                                 <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id})">Withdraw</button>
@@ -205,21 +207,27 @@ function add_row(row) {
             </div>
             <div class="table_small order-2">
             <div class="table_cell">Stake Option</div>
-            <div class="table_cell text-blue"><span>4 Months &nbsp;<i class="fas fa-lock"></i></span></div>
+            <div class="table_cell text-blue"><span>${formatUnit(row.lp_amount, 18, 10)}</span></div>
             </div>
             <div class="table_small order-3">
             <div class="table_cell">Amount</div>
             <div class="table_cell">${formatUnit(row.busd_amount, decimals.busd)} BUSD</div>
             </div>
             <div class="table_small order-4">
-            <div class="table_cell">% per Year</div>
-            <div class="table_cell">${formatUnit(row.reward_percentage,8,3) * 3}%</div>
+            <div class="table_cell">APY</div>
+            <div class="table_cell">${myFixed(formatUnit(row.reward_percentage,8,3) * 3, 3)}%</div>
             </div>
-            <div class="table_small order-1">
-            <div class="table_cell">Yield received</div>
+            <div class="table_small order-5">
+            <div class="table_cell">Yield in BUSD</div>
             <div class="table_cell">
-                <span class="text-success" id="yield_${row.id}">0</span> BUSD 
-                <a href="#" class="btn btn-warning" style="display:none" id="collect_${row.id}">Collect</a>
+                <span class="text-success" id="yield_busd_${row.id}">0</span> BUSD
+            </div>
+            </div>
+            <div class="table_small order-6">
+            <div class="table_cell">Yield in HST(Estimated)</div>
+            <div class="table_cell">
+                <span class="text-success" id="yield_hst_${row.id}">0</span> HST
+                <button onclick="harvest(${row.id})" class="btn btn-warning" style="display:none" id="collect_${row.id}" >Collect</button>
             </div>
             </div>
         </div>
@@ -229,8 +237,10 @@ function add_row(row) {
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     callSmartContract(contract, "get_pending_reward", [row.id])
         .then(reward => {
-            reward = formatUnit(reward, decimals.busd);
-            $(`#yield_${row.id}`).html(reward);
+            reward = formatUnit(reward, decimals.busd, 2);
+            const reward_in_hst = parseInt(reward * 1e8 / states.wjxn_price);
+            $(`#yield_busd_${row.id}`).html(reward);
+            $(`#yield_hst_${row.id}`).html(reward_in_hst);
             if(reward > 0) $(`#collect_${row.id}`).show();
         })
 }
@@ -256,6 +266,13 @@ async function get_reward_pool() {
     $("#hst_balance").html(hst_balance);
 }
 
+async function get_total_staked() {
+    const web3 = new Web3(RPC_URL);
+    const contract = new web3.eth.Contract(abis.erc20, addresses.lpToken);
+    let total_staked = await callSmartContract(contract, "balanceOf", [addresses.jaxFarming]);
+    $("#total_staked").html(formatUnit(total_staked, 18, 10));
+}
+
 function update_withdrawal_date() {
     const withdrawal_date = new Date();
     withdrawal_date.setTime(withdrawal_date.getTime() + 120 * 24 * 3600 * 1000);
@@ -272,16 +289,54 @@ async function withdraw(stake_id) {
         pendingTitle: "Withdraw"
     });
     check_status();
-    render_table();
+    get_user_farms();
 }
 
 async function restake(stake_id) {
     if(is_disconnected()) return;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
-    runContract(contract, "restake", [stake_id], {
+    await runContract(contract, "restake", [stake_id], {
         confirmationTitle: "Restake",
         pendingTitle: "Restake"
     });
     check_status();
-    render_table();
+    get_user_farms();
+}
+
+async function harvest(stake_id) {
+    if(is_disconnected()) return;
+    const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    await runContract(contract, "harvest", [stake_id], {
+        confirmationTitle: "Harvest",
+        pendingTitle: "Harvest"
+    });
+    check_status();
+    get_user_farms();
+}
+
+
+async function get_wjxn_price() {
+    const jaxFarming = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    const lpToken = new web3.eth.Contract(abis.lpToken, addresses.lpToken);
+    let [minimum_wjxn_price, reserves, token0] = await Promise.all([
+        callSmartContract(jaxFarming, "minimum_wjxn_price", []),
+        callSmartContract(lpToken, "getReserves", []),
+        callSmartContract(lpToken, "token0", [])
+    ]);
+    minimum_wjxn_price = formatUnit(minimum_wjxn_price, 18);
+    let wjxn_amount;
+    let busd_amount;
+    if(token0 == addresses.wjxn) {
+        wjxn_amount = formatUnit(reserves[0], 0);
+        busd_amount = formatUnit(reserves[1], decimals.busd);
+    }
+    else {
+        wjxn_amount = formatUnit(reserves[1], 0);
+        busd_amount = formatUnit(reserves[0], decimals.busd);
+    }
+    let wjxn_price = busd_amount / wjxn_amount;
+    if(minimum_wjxn_price > wjxn_price)
+        wjxn_price = minimum_wjxn_price;
+    states.wjxn_price = wjxn_price;
+    return wjxn_price;
 }
