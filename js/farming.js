@@ -21,10 +21,11 @@ async function stake_LP() {
     amount = parseUnit(amount, 18);
     if(amount == 0) return;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
-    runContract(contract, "create_farm", [amount], {
+    await runContract(contract, "create_farm", [amount], {
         confirmationTitle: "Depositing WJXN/BUSD LP",
         pendingTitle: "Stake WJXN/BUSD LP"
     });
+    get_user_farms();
 }
 
 async function stake_BUSD() {
@@ -32,10 +33,11 @@ async function stake_BUSD() {
     amount = parseUnit(amount, 18);
     if(amount == 0) return;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
-    runContract(contract, "create_farm_busd", [amount], {
+    await runContract(contract, "create_farm_busd", [amount], {
         confirmationTitle: "Depositing BUSD",
         pendingTitle: "Stake BUSD"
     });
+    get_user_farms();
 }
 
 async function check_status() {
@@ -139,8 +141,24 @@ async function get_user_farms() {
                 id: ids[i],
                 is_active: parseInt(each.end_timestamp) > current_timestamp
             }
-        ));
-        table_data = new_table_data.reverse();
+        ))
+        .map(each => Object.assign(each, { is_ended: !each.is_active && !each.is_withdrawn }));
+        // table_data = new_table_data.reverse();
+        table_data = new_table_data.sort((a, b) => {
+            if(a.is_ended && !b.is_ended)
+                return -1;
+            if(!a.is_ended && b.is_ended)
+                return 1;
+            if(a.is_ended && b.is_ended) 
+                return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? -1: 1;
+            if(a.is_active && !b.is_active)
+                return -1;
+            if(!a.is_active && b.is_active)
+                return 1;
+            if(a.is_active && b.is_active) 
+                return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? 1: -1;
+            return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? -1: 1;
+        })
         render_table();
     }catch(e) {
 
@@ -156,7 +174,7 @@ function filter_table_data() {
         case 1: // ACTIVE
             return table_data.filter(each => each.is_active);
         case 2: // ENDED
-            return table_data.filter(each => !each.is_active && !each.is_withdrawn);
+            return table_data.filter(each => each.is_ended);
         case 3: // WITHDRAWN
             return table_data.filter(each => each.is_withdrawn);
     }
@@ -170,7 +188,31 @@ function render_table() {
 function add_row(row) {
     var html = `
         <div class="table_row">
-            <div class="table_small order-5">
+            <div class="table_small order-1">
+            <div class="table_cell">Stake Option</div>
+            <div class="table_cell text-blue">
+                <div>${formatUnit(row.lp_amount, 18, 18)}</div>
+                <div>$ ${formatUnit(row.busd_amount, decimals.busd, 2)}</div>
+            </div>
+            </div>
+            <div class="table_small order-2">
+            <div class="table_cell">APY</div>
+            <div class="table_cell">${myFixed(formatUnit(row.reward_percentage,8,3) * 3, 3)}%</div>
+            </div>
+            <div class="table_small order-3" style="width: 340px">
+            <div class="table_cell">Yield in HST(Estimated)</div>
+            <div class="table_cell d-flex flex-column" style="justify-content: space-between;">
+                <div class="pb-2">
+                    <span class="text-success" id="yield_busd_${row.id}">0</span> BUSD
+                    <br>
+                    <div style="font-size:85%">
+                    Estimated HST: <span class="text-success" id="yield_hst_${row.id}">0</span> HST
+                    </div>
+                </div>
+                <button onclick="harvest(${row.id})" class="btn btn-warning" style="display:none;width:120px" id="collect_${row.id}" >Collect</button>
+            </div>
+            </div>
+            <div class="table_small order-4" style="width:300px">
             <div class="table_cell">Status</div>
             <div class="table_cell">
                 <a class="btn" data-toggle="collapse" href="#stake_${row.id}" role="button" aria-expanded="false"
@@ -186,9 +228,9 @@ function add_row(row) {
                     <div class="text-blue">
                         <div class="row justify-content-around">
                         <div class="col-12 text-md-left extra">
-                            <p class="pb-0 mb-0"><strong>Deposit date:</strong> ${(new Date(row.start_timestamp * 1000).toLocaleString())}</p>
-                            <p class="pb-0 mb-0"><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd, 2)} BUSD</p>
-                            <p class=""><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
+                            <p class="pt-2 pb-0 mb-0"><strong>Deposit date:</strong> ${(new Date(row.start_timestamp * 1000).toLocaleString())}</p>
+                            <p class="pb-0 mb-0"><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
+                            <p class=""><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd, 2)} BUSD</p>
                             <p class="pb-0 mb-0" style="display:${(!row.is_active && !row.is_withdrawn) ? "" : "none"}">
                                 <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id})">Withdraw</button>
                                 <button class="btn btn-info mb-1 mb-md-0" onclick="restake(${row.id})">Restake</button>
@@ -203,31 +245,6 @@ function add_row(row) {
                 </div>
         
                 <!--- Extra content--->
-            </div>
-            </div>
-            <div class="table_small order-2">
-            <div class="table_cell">Stake Option</div>
-            <div class="table_cell text-blue"><span>${formatUnit(row.lp_amount, 18, 10)}</span></div>
-            </div>
-            <div class="table_small order-3">
-            <div class="table_cell">Amount</div>
-            <div class="table_cell">${formatUnit(row.busd_amount, decimals.busd)} BUSD</div>
-            </div>
-            <div class="table_small order-4">
-            <div class="table_cell">APY</div>
-            <div class="table_cell">${myFixed(formatUnit(row.reward_percentage,8,3) * 3, 3)}%</div>
-            </div>
-            <div class="table_small order-5">
-            <div class="table_cell">Yield in BUSD</div>
-            <div class="table_cell">
-                <span class="text-success" id="yield_busd_${row.id}">0</span> BUSD
-            </div>
-            </div>
-            <div class="table_small order-6">
-            <div class="table_cell">Yield in HST(Estimated)</div>
-            <div class="table_cell">
-                <span class="text-success" id="yield_hst_${row.id}">0</span> HST
-                <button onclick="harvest(${row.id})" class="btn btn-warning" style="display:none" id="collect_${row.id}" >Collect</button>
             </div>
             </div>
         </div>
