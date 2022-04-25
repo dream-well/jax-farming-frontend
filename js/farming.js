@@ -1,5 +1,5 @@
 const RPC_URL = "https://data-seed-prebsc-1-s1.binance.org:8545/";
-const states = {};
+const states = {yields: {}};
 
 void function main() {
     $("#jaxfarm_address").html(addresses.jaxFarming);
@@ -16,27 +16,31 @@ function shortenAddress(address) {
     return address.substr(0, 6) + "..." + address.substr(36);
 }
 
-async function stake_LP() {
+async function stake_LP(btn) {
     let amount = $("#amount_LP").val();
     amount = parseUnit(amount, 18);
     if(amount == 0) return;
+    btn.disabled = true;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "create_farm", [amount], {
         confirmationTitle: "Depositing WJXN/BUSD LP",
         pendingTitle: "Stake WJXN/BUSD LP"
     });
+    btn.disabled = false;
     get_user_farms();
 }
 
-async function stake_BUSD() {
+async function stake_BUSD(btn) {
     let amount = $("#amount_BUSD").val();
     amount = parseUnit(amount, 18);
     if(amount == 0) return;
+    btn.disabled = true;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "create_farm_busd", [amount], {
         confirmationTitle: "Depositing BUSD",
         pendingTitle: "Stake BUSD"
     });
+    btn.disabled = false;
     get_user_farms();
 }
 
@@ -51,6 +55,7 @@ async function check_status() {
     }
     $(".btn_connects").hide();
     get_user_farms();
+    get_total_staked();
     let busd = new web3.eth.Contract(abis.erc20, addresses.busd);
     let lpToken = new web3.eth.Contract(abis.erc20, addresses.lpToken);
     let [allowance1, allowance2] = await Promise.all([
@@ -203,13 +208,13 @@ function add_row(row) {
             <div class="table_cell">Yield in HST(Estimated)</div>
             <div class="table_cell d-flex flex-column" style="justify-content: space-between;">
                 <div class="pb-2">
-                    <span class="text-success" id="yield_busd_${row.id}">0</span> BUSD
+                    <span class="text-success" id="yield_busd_${row.id}">${states.yields[row.id] ? states.yields[row.id].busd : 0}</span> BUSD
                     <br>
                     <div style="font-size:85%">
-                    Estimated HST: <span class="text-success" id="yield_hst_${row.id}">0</span> HST
+                    Estimated HST: <span class="text-success" id="yield_hst_${row.id}">${states.yields[row.id] ? states.yields[row.id].hst : 0}</span> HST
                     </div>
                 </div>
-                <button onclick="harvest(${row.id})" class="btn btn-warning" style="display:none;width:120px" id="collect_${row.id}" >Collect</button>
+                <button onclick="harvest(${row.id}, this)" class="btn btn-warning" style="display:${states.yields[row.id] && states.yields[row.id].busd > 0 ? "" : "none"};width:120px" id="collect_${row.id}" >Collect</button>
             </div>
             </div>
             <div class="table_small order-4" style="width:300px">
@@ -217,7 +222,7 @@ function add_row(row) {
             <div class="table_cell">
                 <a class="btn" data-toggle="collapse" href="#stake_${row.id}" role="button" aria-expanded="false"
                 aria-controls="stake_${row.id}"><i class="fas fa-chevron-down"></i></a>
-                <span class="alert-${row.is_locked ? "success" : (row.is_withdrawn ? "warning" : "danger")} py-1 px-2 border-radius">
+                <span class="alert-${row.is_locked ? "danger" : (row.is_withdrawn ? "warning" : "success")} py-1 px-2 border-radius">
                     ${row.is_locked ? "Locked" : (row.is_withdrawn ? "Withdrawn" : "Unlocked")}
                 </span>
                 <!--- Extra content--->
@@ -232,8 +237,8 @@ function add_row(row) {
                             <p class="pb-0 mb-0"><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
                             <p class=""><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd, 2)} BUSD</p>
                             <p class="pb-0 mb-0" style="display:${(!row.is_locked && !row.is_withdrawn) ? "" : "none"}">
-                                <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id})">Withdraw</button>
-                                <button class="btn btn-info mb-1 mb-md-0" onclick="restake(${row.id})">Restake</button>
+                                <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id}, this)">Withdraw</button>
+                                <button class="btn btn-info mb-1 mb-md-0" onclick="restake(${row.id}, this)">Restake</button>
                             </p>
                         </div>
         
@@ -258,6 +263,7 @@ function add_row(row) {
             const reward_in_hst = parseInt(reward * 1e8 / states.wjxn_price);
             $(`#yield_busd_${row.id}`).html(reward);
             $(`#yield_hst_${row.id}`).html(reward_in_hst);
+            states.yields[row.id] = {busd: reward, hst: reward_in_hst};
             if(reward > 0) $(`#collect_${row.id}`).show();
         })
 }
@@ -285,9 +291,15 @@ async function get_reward_pool() {
 
 async function get_total_staked() {
     const web3 = new Web3(RPC_URL);
-    const contract = new web3.eth.Contract(abis.erc20, addresses.lpToken);
-    let total_staked = await callSmartContract(contract, "balanceOf", [addresses.jaxFarming]);
-    $("#total_staked").html(formatUnit(total_staked, 18, 10));
+    const contract = new web3.eth.Contract(abis.lpToken, addresses.lpToken);
+    let [total_liquidity, total_staked, reserves, token0] = await Promise.all([
+        callSmartContract(contract, "totalSupply", []),
+        callSmartContract(contract, "balanceOf", [addresses.jaxFarming]),
+        callSmartContract(contract, "getReserves", []),
+        callSmartContract(contract, "token0", [])
+    ]);
+    let busd_reserve = reserves[token0 == addresses.busd ? 0 : 1];
+    $("#total_staked").html("$ " + 2 * formatUnit(BN(total_staked).mul(BN(busd_reserve)).div(BN(total_liquidity)).toString(), decimals.busd, 2));
 }
 
 function update_withdrawal_date() {
@@ -298,35 +310,41 @@ function update_withdrawal_date() {
 
 
 
-async function withdraw(stake_id) {
+async function withdraw(stake_id, btn) {
     if(is_disconnected()) return;
+    btn.disabled = true;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "withdraw", [stake_id], {
         confirmationTitle: "Withdraw",
         pendingTitle: "Withdraw"
     });
+    btn.disabled = false;
     check_status();
     get_user_farms();
 }
 
-async function restake(stake_id) {
+async function restake(stake_id, btn) {
     if(is_disconnected()) return;
+    btn.disabled = true;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "restake", [stake_id], {
         confirmationTitle: "Restake",
         pendingTitle: "Restake"
     });
+    btn.disabled = false;
     check_status();
     get_user_farms();
 }
 
-async function harvest(stake_id) {
+async function harvest(stake_id, btn) {
     if(is_disconnected()) return;
+    btn.disabled = true;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "harvest", [stake_id], {
         confirmationTitle: "Harvest",
         pendingTitle: "Harvest"
     });
+    btn.disabled = false;
     check_status();
     get_user_farms();
 }
