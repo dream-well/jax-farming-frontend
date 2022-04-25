@@ -139,23 +139,23 @@ async function get_user_farms() {
         new_table_data = new_table_data.map((each, i) => Object.assign(each, 
             {
                 id: ids[i],
-                is_active: parseInt(each.end_timestamp) > current_timestamp
+                is_locked: parseInt(each.end_timestamp) > current_timestamp
             }
         ))
-        .map(each => Object.assign(each, { is_ended: !each.is_active && !each.is_withdrawn }));
+        .map(each => Object.assign(each, { is_unlocked: !each.is_locked && !each.is_withdrawn }));
         // table_data = new_table_data.reverse();
         table_data = new_table_data.sort((a, b) => {
-            if(a.is_ended && !b.is_ended)
+            if(a.is_unlocked && !b.is_unlocked)
                 return -1;
-            if(!a.is_ended && b.is_ended)
+            if(!a.is_unlocked && b.is_unlocked)
                 return 1;
-            if(a.is_ended && b.is_ended) 
+            if(a.is_unlocked && b.is_unlocked) 
                 return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? -1: 1;
-            if(a.is_active && !b.is_active)
+            if(a.is_locked && !b.is_locked)
                 return -1;
-            if(!a.is_active && b.is_active)
+            if(!a.is_locked && b.is_locked)
                 return 1;
-            if(a.is_active && b.is_active) 
+            if(a.is_locked && b.is_locked) 
                 return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? 1: -1;
             return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? -1: 1;
         })
@@ -172,9 +172,9 @@ function filter_table_data() {
         case 0:
             return table_data;
         case 1: // ACTIVE
-            return table_data.filter(each => each.is_active);
+            return table_data.filter(each => each.is_locked);
         case 2: // ENDED
-            return table_data.filter(each => each.is_ended);
+            return table_data.filter(each => each.is_unlocked);
         case 3: // WITHDRAWN
             return table_data.filter(each => each.is_withdrawn);
     }
@@ -217,8 +217,8 @@ function add_row(row) {
             <div class="table_cell">
                 <a class="btn" data-toggle="collapse" href="#stake_${row.id}" role="button" aria-expanded="false"
                 aria-controls="stake_${row.id}"><i class="fas fa-chevron-down"></i></a>
-                <span class="alert-${row.is_active ? "success" : (row.is_withdrawn ? "warning" : "danger")} py-1 px-2 border-radius">
-                    ${row.is_active ? "Active" : (row.is_withdrawn ? "Withdrawn" : "Ended")}
+                <span class="alert-${row.is_locked ? "success" : (row.is_withdrawn ? "warning" : "danger")} py-1 px-2 border-radius">
+                    ${row.is_locked ? "Locked" : (row.is_withdrawn ? "Withdrawn" : "Unlocked")}
                 </span>
                 <!--- Extra content--->
         
@@ -231,7 +231,7 @@ function add_row(row) {
                             <p class="pt-2 pb-0 mb-0"><strong>Deposit date:</strong> ${(new Date(row.start_timestamp * 1000).toLocaleString())}</p>
                             <p class="pb-0 mb-0"><strong>Withdrawal date:</strong> ${(new Date(row.end_timestamp * 1000).toLocaleString())}</p>
                             <p class=""><strong>Total reward:</strong> ${formatUnit(row.total_reward, decimals.busd, 2)} BUSD</p>
-                            <p class="pb-0 mb-0" style="display:${(!row.is_active && !row.is_withdrawn) ? "" : "none"}">
+                            <p class="pb-0 mb-0" style="display:${(!row.is_locked && !row.is_withdrawn) ? "" : "none"}">
                                 <button class="btn btn-info mb-1 mb-md-0" onclick="withdraw(${row.id})">Withdraw</button>
                                 <button class="btn btn-info mb-1 mb-md-0" onclick="restake(${row.id})">Restake</button>
                             </p>
