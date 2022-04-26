@@ -6,8 +6,12 @@ let table_data = [];
 void function main() {
     $("#jaxfarm_address").html(addresses.jaxFarming);
     $("#contract_address").html(shortenAddress(addresses.jaxFarming));
-    $("#amountBUSD").on('input', check_status);
-    $("#amountLP").on('input', check_status);
+
+    $("#amount_BUSD").on('keydown', validate_amount);
+    $("#amount_LP").on('keydown', validate_amount);
+
+    $("#amount_BUSD").on('input', allowance_check);
+    $("#amount_LP").on('input', allowance_check);
     get_apy_today();
     get_reward_pool();
     // get_your_stake();
@@ -18,6 +22,14 @@ void function main() {
 
 function shortenAddress(address) {
     return address.substr(0, 6) + "..." + address.substr(36);
+}
+
+function validate_amount(e) {
+    const value = this.value
+    setTimeout(function check_amount(_this) {
+        if(Number(_this.value) < 0 || _this.value.match(/\.\d{19}/) != null)
+            _this.value = value;
+    }, 0, this);
 }
 
 async function stake_LP(btn) {
@@ -59,7 +71,17 @@ async function check_status() {
     }
     $(".btn_connects").hide();
     get_user_farms();
-    // get_your_stake();
+    allowance_check();
+
+    let busd = new web3.eth.Contract(abis.erc20, addresses.busd);
+    let lpToken = new web3.eth.Contract(abis.erc20, addresses.lpToken);
+    $("#balance_BUSD").html(await get_balance(busd, 18));
+    $("#balance_LP").html(await get_balance(lpToken, 18, 18));
+
+}
+
+async function allowance_check() {
+    if(is_disconnected()) return;
     let busd = new web3.eth.Contract(abis.erc20, addresses.busd);
     let lpToken = new web3.eth.Contract(abis.erc20, addresses.lpToken);
     let [allowance1, allowance2] = await Promise.all([
@@ -96,9 +118,6 @@ async function check_status() {
         $("#btn_approve_LP").hide();
         $("#btn_stake_LP").show();
     }
-
-    $("#balance_BUSD").html(await get_balance(busd, 18));
-    $("#balance_LP").html(await get_balance(lpToken, 18, 18));
 }
     
 

@@ -148,7 +148,7 @@ function blockExplorer(type, hash) {
 }
 
 function validateInput(amount, decimal = 18) {
-    if(Number(amount) == NaN)
+    if(isNaN(Number(amount)))
         return 0;
     if(Number(amount) < 0) return 0;
     amount = floor(amount, decimal);
