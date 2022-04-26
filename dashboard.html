@@ -57,6 +57,7 @@
               <div class="text-center">
                 <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool amount</small></p>
                 <p class="text-blue pb-0 mb-0 font-weight-bold"><span id="hst_balance">-</span> HST</p>
+                <p class="text-blue pb-0 mb-0" id="hst_balance_usd"></p>
               </div>
             </div>
           </div>
@@ -73,6 +74,7 @@
               <div class="text-center">
                 <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Total Staked</small></p>
                 <p class="text-blue pb-0 mb-0 font-weight-bold" id="total_staked"></p>
+                <p class="text-blue pb-0 mb-0" id="total_staked_usd"></p>
               </div>
             </div>
           </div>
@@ -128,7 +130,7 @@
                 <div class="row">
                   <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
-                    <button style="display: none;" class="btn btn-info w-100" id="btn_approve_BUSD" onclick="approve_BUSD()">
+                    <button style="display: none;" class="btn btn-info w-100" id="btn_approve_BUSD" onclick="approve_BUSD(this)">
                       Approve
                     </button>
                     <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;" onclick="stake_BUSD(this)">
@@ -170,7 +172,7 @@
                   <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
                     <button class="btn btn-info w-100" id="btn_approve_LP" style="display: none;"
-                      onclick="approve_LP()">Approve</button>
+                      onclick="approve_LP(this)">Approve</button>
                     <button class="btn btn-info w-100" id="btn_stake_LP" style="display: none;"
                       onclick="stake_LP(this)">Stake</button>
                   </div>

@@ -1,5 +1,7 @@
 const RPC_URL = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 const states = {yields: {}};
+let table_updating = false;
+let table_data = [];
 
 void function main() {
     $("#jaxfarm_address").html(addresses.jaxFarming);
@@ -10,6 +12,7 @@ void function main() {
     get_total_staked();
     setInterval(update_withdrawal_date, 1000);
     update_withdrawal_date();
+    setInterval(update_reward_info(), 10000);
 }()
 
 function shortenAddress(address) {
@@ -102,15 +105,19 @@ function accountChanged() {
     check_status();
 }
 
-async function approve_LP() {
+async function approve_LP(btn) {
     let contract = new web3.eth.Contract(abis.erc20, addresses.lpToken);
+    btn.disabled = true;
     await approve_token("BUSD/WJXN LpToken", contract, addresses.jaxFarming);
+    btn.disabled = false;
     check_status();
 }
 
-async function approve_BUSD() {
+async function approve_BUSD(btn) {
     let contract = new web3.eth.Contract(abis.erc20, addresses.busd);
+    btn.disabled = true;
     await approve_token("BUSD", contract, addresses.jaxFarming);
+    btn.disabled = false;
     check_status();
 }
 
@@ -127,9 +134,6 @@ async function select_max_balance_BUSD() {
     $("#amount_BUSD").val(balance);
     check_status();
 }
-
-let table_updating = false;
-let table_data = [];
 
 async function get_user_farms() {
     if(is_disconnected()) return;
@@ -188,6 +192,7 @@ function filter_table_data() {
 function render_table() {
     $("#results .table_row").remove();
     filter_table_data().forEach( row => add_row(row));
+    update_reward_info();
 }
 
 function add_row(row) {
@@ -255,6 +260,14 @@ function add_row(row) {
         </div>
     `
     $("#results").append(html);
+}
+
+function update_reward_info() {
+    if(is_disconnected()) return;
+    filter_table_data().forEach( row => update_row(row));
+}
+
+function update_row(row) {
     if(row.is_withdrawn) return;
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     callSmartContract(contract, "get_pending_reward", [row.id])
@@ -265,6 +278,7 @@ function add_row(row) {
             $(`#yield_hst_${row.id}`).html(reward_in_hst);
             states.yields[row.id] = {busd: reward, hst: reward_in_hst};
             if(reward > 0) $(`#collect_${row.id}`).show();
+            else $(`#collect_${row.id}`).hide();
         })
 }
 
@@ -287,6 +301,8 @@ async function get_reward_pool() {
     const contract = new web3.eth.Contract(abis.erc20, addresses.hst);
     let hst_balance = await callSmartContract(contract, "balanceOf", [addresses.jaxFarming]);
     $("#hst_balance").html(hst_balance);
+    await get_wjxn_price();
+    $("#hst_balance_usd").html("$ " + parseInt((hst_balance / 1e8) * states.wjxn_price * 100) / 100)
 }
 
 async function get_total_staked() {
@@ -299,7 +315,8 @@ async function get_total_staked() {
         callSmartContract(contract, "token0", [])
     ]);
     let busd_reserve = reserves[token0 == addresses.busd ? 0 : 1];
-    $("#total_staked").html("$ " + 2 * formatUnit(BN(total_staked).mul(BN(busd_reserve)).div(BN(total_liquidity)).toString(), decimals.busd, 2));
+    $("#total_staked").html(formatUnit(total_staked, 18, 18));
+    $("#total_staked_usd").html("$ " + 2 * formatUnit(BN(total_staked).mul(BN(busd_reserve)).div(BN(total_liquidity)).toString(), decimals.busd, 2));
 }
 
 function update_withdrawal_date() {
@@ -351,8 +368,11 @@ async function harvest(stake_id, btn) {
 
 
 async function get_wjxn_price() {
-    const jaxFarming = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
-    const lpToken = new web3.eth.Contract(abis.lpToken, addresses.lpToken);
+    let _web3 = web3;
+    if(is_disconnected())
+        _web3 = new Web3(RPC_URL);
+    const jaxFarming = new _web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
+    const lpToken = new _web3.eth.Contract(abis.lpToken, addresses.lpToken);
     let [minimum_wjxn_price, reserves, token0] = await Promise.all([
         callSmartContract(jaxFarming, "minimum_wjxn_price", []),
         callSmartContract(lpToken, "getReserves", []),
