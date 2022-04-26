@@ -34,7 +34,7 @@
 
 <body class="">
   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-    <div class="container-fluid"><a class="navbar-brand" href="#"><img src="img/jax-net_logo_blue.svg" width="150"></a>
+    <div class="container-fluid"><a class="navbar-brand" href="index.html"><img src="img/jax-net_logo_blue.svg" width="150"></a>
       <div class="ml-md-auto">
         <div class="form-inline homeselect">
           <button class="btn btn-success border-radius mr-2 btn_connect" onclick="connect_wallet()">Connect a wallet</button>
@@ -55,7 +55,7 @@
           <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
-                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool amount</small></p>
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool</small></p>
                 <p class="text-blue pb-0 mb-0 font-weight-bold"><span id="hst_balance">-</span> HST</p>
                 <p class="text-blue pb-0 mb-0" id="hst_balance_usd"></p>
               </div>
@@ -72,7 +72,7 @@
           <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
-                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Total Staked</small></p>
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Your stake</small></p>
                 <p class="text-blue pb-0 mb-0 font-weight-bold" id="total_staked"></p>
                 <p class="text-blue pb-0 mb-0" id="total_staked_usd"></p>
               </div>
@@ -185,15 +185,15 @@
         <!---- data table-->
         <div class="row bg-white border-radius ml-0 mr-0">
           <div class="p-md-3 p-2 col-12">
-            <h3 class="text-blue">My Deposits</h3>
+            <h3 class="text-blue">My Farms</h3>
             <form>
               <div class="form-row align-items-center text-blue">
                 <div class="col-auto my-1">
                   <label class="mr-sm-2" for="inlineFormCustomSelect">Search By</label>
                   <select class="custom-select mr-sm-2" id="filter" onchange="render_table()">
                     <option value="0" selected>All</option>
-                    <option value="1">Active</option>
-                    <option value="2">Ended</option>
+                    <option value="1">Locked</option>
+                    <option value="2">Unlocked</option>
                     <option value="3">Withdrawn</option>
                   </select>
                 </div>
@@ -203,7 +203,7 @@
             <div class="restable text-blue" id="results">
               <div class="theader">
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Lp token</div>
-                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">APY</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">APR</div>
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Yield</div>
                 <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Status</div>
               </div>
@@ -240,7 +240,7 @@
 
       </div>
       <div class="row d-flex">
-        <div class="col-12 col-md-6 my-auto text-center text-md-left">©2021. JAX Net. All rights reserved </div>
+        <div class="col-12 col-md-6 my-auto text-center text-md-left">©2022. JAX Net. All rights reserved </div>
         <div class="col-12 col-md-6 text-center text-md-right">
           <div class="social mt-3 pb-3"> <a href="#" target="_blank" class="p-2"><img src="img/facebook.svg"
                 width="15px" /></a> <a href="#" target="_blank" class="p-2"><img src="img/twitter.svg"
