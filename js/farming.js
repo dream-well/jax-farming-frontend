@@ -159,6 +159,7 @@ async function select_max_balance_BUSD() {
 
 async function get_user_farms() {
     if(is_disconnected()) return;
+    if($("#results").length == 0) return;
     if(table_updating) return;
     table_updating = true;
     get_wjxn_price();
