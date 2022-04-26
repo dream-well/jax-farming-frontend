@@ -219,6 +219,7 @@ function render_table() {
 }
 
 function add_row(row) {
+    let hst = states.yields[row.id] ? states.yields[row.id].hst : 0;
     var html = `
         <div class="table_row">
             <div class="table_small order-1">
@@ -236,11 +237,11 @@ function add_row(row) {
             <div class="table_cell">Yield in HST(Estimated)</div>
             <div class="table_cell d-flex flex-column" style="justify-content: space-between;">
                 <div class="pb-2">
-                    <span class="text-success" id="yield_busd_${row.id}">${states.yields[row.id] ? states.yields[row.id].busd : 0}</span> BUSD
-                    <br>
-                    <div style="font-size:85%">
-                    Estimated HST: <span class="text-success" id="yield_hst_${row.id}">${states.yields[row.id] ? states.yields[row.id].hst : 0}</span> HST
-                    </div>
+                    $ <span class="text-success" id="yield_busd_${row.id}">${states.yields[row.id] ? states.yields[row.id].busd : 0}</span>
+                    <span style="font-size:85%;display:${hst>0?"":"none"};" id="hst_span_${row.id}">
+                        ≈ 
+                        <span class="text-success" id="yield_hst_${row.id}">${hst.toLocaleString()}</span> HST
+                    </span>
                 </div>
                 <button onclick="harvest(${row.id}, this)" class="btn btn-warning" style="display:${states.yields[row.id] && states.yields[row.id].busd > 0 ? "" : "none"};width:120px" id="collect_${row.id}" >Collect</button>
             </div>
@@ -298,10 +299,16 @@ function update_row(row) {
             reward = formatUnit(reward, decimals.busd, 2);
             const reward_in_hst = parseInt(reward * 1e8 / states.wjxn_price);
             $(`#yield_busd_${row.id}`).html(reward);
-            $(`#yield_hst_${row.id}`).html(reward_in_hst);
+            $(`#yield_hst_${row.id}`).html(reward_in_hst.toLocaleString());
             states.yields[row.id] = {busd: reward, hst: reward_in_hst};
-            if(reward > 0) $(`#collect_${row.id}`).show();
-            else $(`#collect_${row.id}`).hide();
+            if(reward > 0){
+                $(`#collect_${row.id}`).show();
+                $(`#hst_span_${row.id}`).show();
+            }
+            else {
+                $(`#collect_${row.id}`).hide();
+                $(`#hst_span_${row.id}`).hide();
+            } 
         })
 }
 
@@ -323,9 +330,9 @@ async function get_reward_pool() {
     const web3 = new Web3(RPC_URL);
     const contract = new web3.eth.Contract(abis.erc20, addresses.hst);
     let hst_balance = await callSmartContract(contract, "balanceOf", [addresses.jaxFarming]);
-    $("#hst_balance").html(hst_balance);
+    $("#hst_balance").html(parseInt(hst_balance).toLocaleString());
     await get_wjxn_price();
-    $("#hst_balance_usd").html("$ " + parseInt((hst_balance / 1e8) * states.wjxn_price * 100) / 100)
+    $("#hst_balance_usd").html("$ " + (parseInt((hst_balance / 1e8) * states.wjxn_price * 100) / 100).toLocaleString())
 }
 
 // async function get_total_staked() {
@@ -425,5 +432,5 @@ async function get_your_stake() {
     let total_staked = table_data.filter(each => !each.is_withdrawn).reduce((a,b) => a.add(BN(b.lp_amount)), BN('0'));
     let total_staked_usd = table_data.filter(each => !each.is_withdrawn).reduce((a,b) => a.add(BN(b.busd_amount)), BN('0'));
     $("#total_staked").html(formatUnit(total_staked, 18, 18));
-    $("#total_staked_usd").html("$ " + formatUnit(total_staked_usd, decimals.busd, 2));
+    $("#total_staked_usd").html("$ " + Number(formatUnit(total_staked_usd, decimals.busd, 2)).toLocaleString());
 }

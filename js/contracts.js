@@ -17,3 +17,5 @@ const abis = {
 const decimals = {
     busd: 18
 }
+
+$("#wjxn_address").html(addresses.wjxn);
