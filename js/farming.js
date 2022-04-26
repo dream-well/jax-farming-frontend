@@ -40,7 +40,8 @@ async function stake_LP(btn) {
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "create_farm", [amount], {
         confirmationTitle: "Depositing WJXN/BUSD LP",
-        pendingTitle: "Stake WJXN/BUSD LP"
+        pendingTitle: "Stake WJXN/BUSD LP",
+        onDone: () => $("#amount_LP").val("")
     });
     btn.disabled = false;
     get_user_farms();
@@ -54,7 +55,8 @@ async function stake_BUSD(btn) {
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     await runContract(contract, "create_farm_busd", [amount], {
         confirmationTitle: "Depositing BUSD",
-        pendingTitle: "Stake BUSD"
+        pendingTitle: "Stake BUSD",
+        onDone: () => $("#amount_BUSD").val("")
     });
     btn.disabled = false;
     get_user_farms();
