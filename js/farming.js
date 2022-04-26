@@ -237,7 +237,7 @@ function add_row(row) {
             <div class="table_cell">Yield in HST(Estimated)</div>
             <div class="table_cell d-flex flex-column" style="justify-content: space-between;">
                 <div class="pb-2">
-                    $ <span class="text-success" id="yield_busd_${row.id}">${states.yields[row.id] ? states.yields[row.id].busd : 0}</span>
+                    $ <span class="text-success" id="yield_busd_${row.id}">${states.yields[row.id] ? states.yields[row.id].busd.toLocaleString() : 0}</span>
                     <span style="font-size:85%;display:${hst>0?"":"none"};" id="hst_span_${row.id}">
                         ≈ 
                         <span class="text-success" id="yield_hst_${row.id}">${hst.toLocaleString()}</span> HST
