@@ -473,7 +473,7 @@ async function add_to_wallet(token) {
         connect_wallet();
         return;
     }
-    await add_token_to_metamask(addresses[token], token, decimals[token], "https://farm.jax.net/img/icon-" + token + ".png");
+    await add_token_to_metamask(addresses[token], symbols[token], decimals[token], "https://farm.jax.net/img/icon-" + token + ".png");
 }
 
 function is_wrong_network() {

@@ -15,7 +15,17 @@ const abis = {
 }
 
 const decimals = {
-    busd: 18
+    busd: 18,
+    wjxn: 0,
+    hst: 0,
+    lpToken: 18
+}
+
+const symbols = {
+    busd: 'BUSD',
+    wjxn: 'WJXN',
+    hst: 'HST',
+    lpToken: 'WJXN-LP'
 }
 
 $("#wjxn_address").html(addresses.wjxn);
