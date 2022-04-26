@@ -6,7 +6,8 @@ let table_data = [];
 void function main() {
     $("#jaxfarm_address").html(addresses.jaxFarming);
     $("#contract_address").html(shortenAddress(addresses.jaxFarming));
-    $("#amountIn").on('input', check_status);
+    $("#amountBUSD").on('input', check_status);
+    $("#amountLP").on('input', check_status);
     get_apy_today();
     get_reward_pool();
     get_total_staked();
@@ -74,8 +75,8 @@ async function check_status() {
         )
     ]);
     
-    allowance1 = formatUnit(allowance1, 18);
-    allowance2 = formatUnit(allowance2, 18);
+    allowance1 = Number(formatUnit(allowance1, 18, 18));
+    allowance2 = Number(formatUnit(allowance2, 18, 18));
     let amountBUSD = $("#amount_BUSD").val();
     let amountLP = $("#amount_LP").val();
     if(allowance1 == 0 || (amountBUSD && allowance1 < amountBUSD)) {
