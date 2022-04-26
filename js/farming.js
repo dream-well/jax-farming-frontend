@@ -294,7 +294,7 @@ async function get_apy_today() {
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     let apy = await callSmartContract(contract, "get_apy_today", []);
     apy = formatUnit(apy, 8);
-    $("#apy_today").html(apy + "%");
+    $("#apy_today").html(apy * 3 + "%" + "  " +"APR");
 }
 
 async function get_reward_pool() {
