@@ -10,7 +10,7 @@ void function main() {
     $("#amountLP").on('input', check_status);
     get_apy_today();
     get_reward_pool();
-    get_total_staked();
+    // get_your_stake();
     setInterval(update_withdrawal_date, 1000);
     update_withdrawal_date();
     setInterval(update_reward_info(), 10000);
@@ -59,7 +59,7 @@ async function check_status() {
     }
     $(".btn_connects").hide();
     get_user_farms();
-    get_total_staked();
+    // get_your_stake();
     let busd = new web3.eth.Contract(abis.erc20, addresses.busd);
     let lpToken = new web3.eth.Contract(abis.erc20, addresses.lpToken);
     let [allowance1, allowance2] = await Promise.all([
@@ -169,6 +169,7 @@ async function get_user_farms() {
                 return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? 1: -1;
             return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? -1: 1;
         })
+        get_your_stake();
         render_table();
     }catch(e) {
 
@@ -306,19 +307,19 @@ async function get_reward_pool() {
     $("#hst_balance_usd").html("$ " + parseInt((hst_balance / 1e8) * states.wjxn_price * 100) / 100)
 }
 
-async function get_total_staked() {
-    const web3 = new Web3(RPC_URL);
-    const contract = new web3.eth.Contract(abis.lpToken, addresses.lpToken);
-    let [total_liquidity, total_staked, reserves, token0] = await Promise.all([
-        callSmartContract(contract, "totalSupply", []),
-        callSmartContract(contract, "balanceOf", [addresses.jaxFarming]),
-        callSmartContract(contract, "getReserves", []),
-        callSmartContract(contract, "token0", [])
-    ]);
-    let busd_reserve = reserves[token0 == addresses.busd ? 0 : 1];
-    $("#total_staked").html(formatUnit(total_staked, 18, 18));
-    $("#total_staked_usd").html("$ " + 2 * formatUnit(BN(total_staked).mul(BN(busd_reserve)).div(BN(total_liquidity)).toString(), decimals.busd, 2));
-}
+// async function get_total_staked() {
+//     const web3 = new Web3(RPC_URL);
+//     const contract = new web3.eth.Contract(abis.lpToken, addresses.lpToken);
+//     let [total_liquidity, total_staked, reserves, token0] = await Promise.all([
+//         callSmartContract(contract, "totalSupply", []),
+//         callSmartContract(contract, "balanceOf", [addresses.jaxFarming]),
+//         callSmartContract(contract, "getReserves", []),
+//         callSmartContract(contract, "token0", [])
+//     ]);
+//     let busd_reserve = reserves[token0 == addresses.busd ? 0 : 1];
+//     $("#total_staked").html(formatUnit(total_staked, 18, 18));
+//     $("#total_staked_usd").html("$ " + 2 * formatUnit(BN(total_staked).mul(BN(busd_reserve)).div(BN(total_liquidity)).toString(), decimals.busd, 2));
+// }
 
 function update_withdrawal_date() {
     const withdrawal_date = new Date();
@@ -395,4 +396,13 @@ async function get_wjxn_price() {
         wjxn_price = minimum_wjxn_price;
     states.wjxn_price = wjxn_price;
     return wjxn_price;
+}
+
+
+async function get_your_stake() {
+    if(is_disconnected()) return;
+    let total_staked = table_data.filter(each => !each.is_withdrawn).reduce((a,b) => a.add(BN(b.lp_amount)), BN('0'));
+    let total_staked_usd = table_data.filter(each => !each.is_withdrawn).reduce((a,b) => a.add(BN(b.busd_amount)), BN('0'));
+    $("#total_staked").html(formatUnit(total_staked, 18, 18));
+    $("#total_staked_usd").html("$ " + formatUnit(total_staked_usd, decimals.busd, 2));
 }

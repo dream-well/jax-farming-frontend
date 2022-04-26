@@ -6,6 +6,7 @@ function parseUnit(number, decimal = 18) {
 }
 
 function formatUnit(number, decimal = 18, fractionDigits = 6) {
+    if(typeof number == 'object') number = number.toString();
     if(typeof number != "string") number = "0";
     if(number.length <= decimal) number = "0".repeat(decimal + 1 - number.length) + number;
     number = myFixed(Number(number.substr(0, number.length - decimal) + "." + number.substr(number.length - decimal)), fractionDigits);
