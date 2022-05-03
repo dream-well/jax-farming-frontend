@@ -63,12 +63,13 @@ async function stake_BUSD(btn) {
 }
 
 async function check_status() {
-    if(accounts.length == 0) {
+    get_your_stake();
+    if(is_disconnected()) {
         $(".btn_connects").show();
         $("#btn_approve_lp").hide();
-        $("#btn_stake_lp").hide();
+        $("#btn_stake_LP").hide();
         $("#btn_approve_busd").hide();
-        $("#btn_stake_busd").hide();
+        $("#btn_stake_BUSD").hide();
         return;
     }
     $(".btn_connects").hide();
@@ -438,7 +439,11 @@ async function get_wjxn_price() {
 
 
 async function get_your_stake() {
-    if(is_disconnected()) return;
+    if(is_disconnected()) {
+        $("#total_staked").html("0");
+        $("#total_staked_usd").html("$ 0");
+        return;
+    } 
     let total_staked = table_data.filter(each => !each.is_withdrawn).reduce((a,b) => a.add(BN(b.lp_amount)), BN('0'));
     let total_staked_usd = table_data.filter(each => !each.is_withdrawn).reduce((a,b) => a.add(BN(b.busd_amount)), BN('0'));
     $("#total_staked").html(formatUnit(total_staked, 18, 18));

@@ -117,19 +117,15 @@ function on_wallet_connected() {
     $("#btn_swap").html("Swap");
 
     // Colony page
-    if(typeof check_status == "function") check_status();
+    // if(typeof check_status == "function") check_status();
 }
 
 function on_wallet_disconnected() {
-    $(".btn_buy").html("Connect a wallet");
-    $("#btn_swap").html("Connect a Wallet");
-    $("#btn_swap").attr("disabled", false);
-    $("#btn_approve").hide();
     $(".btn_connect").html("Connect a Wallet");
 
     // Colony page
 
-    if(typeof check_status == "function") check_status();
+    if(typeof accountChanged == "function") accountChanged();
 }
 
 function on_wrong_network() {
@@ -138,6 +134,7 @@ function on_wrong_network() {
     $(".btn_connect").removeClass("btn-success");
     $(".btn_connect").addClass("btn-danger");
     $("#btn_swap").html("Switch Network");
+    if(typeof accountChanged == "function") accountChanged();
 }
 
 function init_web3() {
@@ -200,6 +197,7 @@ async function onConnect() {
         }
         if (accounts.length == 0) {
             reset_connect_button();
+            on_wallet_disconnected();
         } else {
             set_connected_address();
         }
@@ -213,6 +211,8 @@ async function onConnect() {
             connect_wallet();
         }
     })
+
+    web3.currentProvider.on('disconnect', on_wallet_disconnected);
 
     connect_wallet();
 
