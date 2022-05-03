@@ -798,3 +798,11 @@ input[type="checkbox"].switch_1:checked:after {
 
 #exampleModalXl {z-index: 9999;}
 .orcl { width: 30px; height: 30px; color:#152172; border: dotted 1px #152172; padding: 15px; border-radius:50%;}
+
+
+footer a {
+  color: #9AA9BD !important;
+}
+footer a:hover {
+  color: #fff !important;
+}
