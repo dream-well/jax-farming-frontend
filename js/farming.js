@@ -77,7 +77,8 @@ async function check_status() {
 
     let busd = new web3.eth.Contract(abis.erc20, addresses.busd);
     let lpToken = new web3.eth.Contract(abis.erc20, addresses.lpToken);
-    $("#balance_BUSD").html(await get_balance(busd, 18));
+    let balance = await get_balance(busd, 18);
+    $("#balance_BUSD").html(Number(balance).toLocaleString());
     $("#balance_LP").html(await get_balance(lpToken, 18, 18));
 
 }
@@ -86,21 +87,15 @@ async function allowance_check() {
     if(is_disconnected()) return;
     let busd = new web3.eth.Contract(abis.erc20, addresses.busd);
     let lpToken = new web3.eth.Contract(abis.erc20, addresses.lpToken);
-    let [allowance1, allowance2] = await Promise.all([
-        await callSmartContract(
-            busd,
-            "allowance", 
-            [accounts[0], addresses.jaxFarming]
-        ),
-        await callSmartContract(
-            lpToken,
-            "allowance", 
-            [accounts[0], addresses.jaxFarming]
-        )
+    let ret = await Promise.all([
+        await callSmartContract(busd, "allowance", [accounts[0], addresses.jaxFarming]),
+        await callSmartContract(lpToken, "allowance", [accounts[0], addresses.jaxFarming]),
+        await callSmartContract(busd, "balanceOf", [accounts[0]]),
+        await callSmartContract(lpToken, "balanceOf", [accounts[0]])
     ]);
-    
-    allowance1 = Number(formatUnit(allowance1, 18, 18));
-    allowance2 = Number(formatUnit(allowance2, 18, 18));
+
+    let [allowance1, allowance2, balance1, balance2] = ret.map(each => Number(formatUnit(each, 18, 18)));
+
     let amountBUSD = $("#amount_BUSD").val();
     let amountLP = $("#amount_LP").val();
     if(allowance1 == 0 || (amountBUSD && allowance1 < amountBUSD)) {
@@ -108,6 +103,13 @@ async function allowance_check() {
         $("#btn_stake_BUSD").hide();
     }
     else {
+        let btn_txt = "Stake";
+        if(!amountBUSD)
+            btn_txt = "Enter amount";
+        else if(balance1 < amountBUSD)
+            btn_txt = "Insufficient funds";
+        $("#btn_stake_BUSD").attr("disabled", btn_txt != "Stake");
+        $("#btn_stake_BUSD").html(btn_txt);
         $("#btn_approve_BUSD").hide();
         $("#btn_stake_BUSD").show();
     }
@@ -117,6 +119,13 @@ async function allowance_check() {
         $("#btn_stake_LP").hide();
     }
     else {
+        let btn_txt = "Stake";
+        if(!amountLP)
+            btn_txt = "Enter amount";
+        else if(balance2 < amountLP)
+            btn_txt = "Insufficient funds";
+        $("#btn_stake_LP").attr("disabled", btn_txt != "Stake");
+        $("#btn_stake_LP").html(btn_txt);
         $("#btn_approve_LP").hide();
         $("#btn_stake_LP").show();
     }
