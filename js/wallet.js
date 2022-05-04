@@ -256,6 +256,9 @@ function init_listners() {
 }
 
 function connect_wallet() {
+    if($(".btn_connect").length == 0){
+        return;
+    }
     if(!web3){
         onConnect();
         return;
