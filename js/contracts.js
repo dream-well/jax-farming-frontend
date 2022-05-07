@@ -1,6 +1,6 @@
 
 const addresses = {
-    jaxFarming: '0x069143Ad9C6E04172257324B6f9F7540b6f885aE',
+    jaxFarming: '0x4E9E53cd8AB8785F18bFD3F89626027D1308Aa42',
     busd: '0xa51BcDc792285598Ba7443c71D557e0B7Df6f991',
     lpToken: '0x9983b94beeddb6132c6a4d671bf54e73799110ab',
     hst: '0x4411f3bc052ce3eebffbd7de5c140bbd684ee93a',
