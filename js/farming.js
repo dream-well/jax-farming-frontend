@@ -234,7 +234,7 @@ function add_row(row) {
     var html = `
         <div class="table_row">
             <div class="table_small order-2">
-            <div class="table_cell">Stake ID</div>
+            <div class="table_cell">Farm ID</div>
             <div class="table_cell text-blue"><span>${row.id} </div>
             </div>
             <div class="table_small order-1">
