@@ -35,7 +35,7 @@
 <body class="">
   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
     <div class="container-fluid"><a class="navbar-brand" href="index.html"><img src="img/jax-net_logo_blue.svg" width="150"></a>
-      <div class="ml-md-auto">
+      <div class="ml-md-auto walllet_wrapr">
         <div class="form-inline homeselect">
           <button class="btn btn-success border-radius mr-2 btn_connect" onclick="connect_wallet()">Connect a wallet</button>
           <select class="custom-select my-select chainSelector">
@@ -182,6 +182,112 @@
           </div>
         </div>
         <!--------stake--------->
+        <div class="container">
+          <div class="row">
+            <div class="col-12"> 
+              <!--- Table starts--->
+              <div class="restable text-blue">
+                <div class="theader">
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Network</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Currency</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Name</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Address</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Add to wallet</div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">WJXN</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">Wrapped Jaxnet</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="wjxn_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('wjxn')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">BUSD</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">BUSD Token</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="busd_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('busd')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">WJXN-LP</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">Pancake LPs (WJXN/BUSD)</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="lpToken_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('lpToken')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">HST</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">Haber-Stornetta Token</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="hst_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('hst')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+              </div>
+              <!--- Table ends---> 
+            </div>
+          </div>
+        </div>
+        <!-- tab content --> 
         <!---- data table-->
         <div class="row bg-white border-radius ml-0 mr-0">
           <div class="p-md-3 p-2 col-12">
@@ -227,7 +333,7 @@
                <a href="https://ua.linkedin.com/company/jax-network" target="_blank" class="p-2"><img src="img/linkedin.svg" width="15px"></a> 
                <a href="https://t.me/jax_chat" target="_blank" class="p-2"><img src="img/telegram.svg" width="15px"></a>
                </div>
-            ©2022. JaxCorp.com</div>
+            ©2022. Jax.Net</div>
         </div>
         <!-- <div class="col-lg-3 pb-3">
           <h6>Product</h6>
