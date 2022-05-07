@@ -611,9 +611,6 @@ input[type="checkbox"].switch_1:checked:after {
   .table_row > .table_small:last-child > .table_cell:first-child {
     border-right: none;
   }
-  .table_row > .table_small > .table_cell:last-child {
-    
-  }
   .table_row > .table_small:last-child > .table_cell:first-child {
     border-bottom-left-radius: 5px;
   }
@@ -642,6 +639,15 @@ input[type="checkbox"].switch_1:checked:after {
    font-size: 12px;
 }
 	.stakerstable .btn { font-size: 12px;}
+  .table_row > .table_small > .table_cell:last-child {
+    width: 100%;
+    /* justify-content: center !important; */
+    /* display: flex; */
+    align-items: center;
+  }
+  .walllet_wrapr {
+    width: 100%;
+  }
 }
 
 .rewardtable table td, .rewardtable table th { border-top: 0px; font-size: 12px; padding:3px 0px;}
@@ -793,7 +799,7 @@ input[type="checkbox"].switch_1:checked:after {
 @media (max-width:767px) {
 .homeselect .chainSelector { width:53%;}
 	.navbar-light .navbar-brand { width: 100%; text-align: center; margin-bottom: 10px;}
-	.homeselect { width: 100%;}
+	.homeselect { width: 100%; justify-content: center;}
 }
 
 #exampleModalXl {z-index: 9999;}
