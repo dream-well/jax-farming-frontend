@@ -233,6 +233,10 @@ function add_row(row) {
     let hst = states.yields[row.id] ? states.yields[row.id].hst : 0;
     var html = `
         <div class="table_row">
+            <div class="table_small order-2">
+            <div class="table_cell">Farm ID</div>
+            <div class="table_cell text-blue"><span>${row.id} </div>
+            </div>
             <div class="table_small order-1">
             <div class="table_cell">Stake Option</div>
             <div class="table_cell text-blue">
@@ -334,7 +338,7 @@ async function get_apy_today() {
     const contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     let apy = await callSmartContract(contract, "get_apy_today", []);
     apy = formatUnit(apy, 8);
-    $("#apy_today").html(apy * 3 + "%" + "  " +"APR");
+    $("#apy_today").html((apy * 3).toFixed(2) + "%" + "  " +"APR");
 }
 
 async function get_reward_pool() {
