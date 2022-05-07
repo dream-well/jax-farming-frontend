@@ -203,7 +203,12 @@ async function runContract(contract, func, args, options = {}) {
                     `${options.pendingTitle ? options.pendingTitle : "Transaction is in the queue"}
                     <br/>
                     Pending TxInfo: <a target='_blank' href='${blockExplorer('tx', transactionHash)}'>View</a>
-                    `);
+                    `,
+                    {
+                        labels: {
+                        async: "PROCESSING..."
+                    }
+                });
             }
         })
         .then(tx => {
