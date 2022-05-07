@@ -201,6 +201,7 @@ async function get_user_farms() {
                 return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? 1: -1;
             return parseInt(a.end_timestamp) > parseInt(b.end_timestamp) ? -1: 1;
         })
+        states.yields = {};
         get_your_stake();
         render_table();
     }catch(e) {
@@ -230,6 +231,7 @@ function render_table() {
 }
 
 function add_row(row) {
+    if(row.is_withdrawn) delete states.yields[row.id];
     let hst = states.yields[row.id] ? states.yields[row.id].hst : 0;
     var html = `
         <div class="table_row">
