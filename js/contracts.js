@@ -32,3 +32,5 @@ $("#wjxn_address").html(addresses.wjxn);
 $("#busd_address").html(addresses.busd);
 $("#lpToken_address").html(addresses.lpToken);
 $("#hst_address").html(addresses.hst);
+
+$("#contract_link").attr("href", `https://bscscan.com/address/${addresses.jaxFarming}`);
