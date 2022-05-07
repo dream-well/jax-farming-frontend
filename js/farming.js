@@ -233,6 +233,10 @@ function add_row(row) {
     let hst = states.yields[row.id] ? states.yields[row.id].hst : 0;
     var html = `
         <div class="table_row">
+            <div class="table_small order-2">
+            <div class="table_cell">Stake ID</div>
+            <div class="table_cell text-blue"><span>${row.id} </div>
+            </div>
             <div class="table_small order-1">
             <div class="table_cell">Stake Option</div>
             <div class="table_cell text-blue">
