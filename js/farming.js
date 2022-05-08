@@ -435,9 +435,11 @@ async function get_wjxn_price() {
         busd_amount = formatUnit(reserves[0], decimals.busd);
     }
     let wjxn_price = busd_amount / wjxn_amount;
+    $("#wjxn_dex_price").html("$ " + (parseInt(wjxn_price * 100) / 100).toLocaleString() );
     if(minimum_wjxn_price > wjxn_price)
         wjxn_price = minimum_wjxn_price;
     states.wjxn_price = wjxn_price;
+    $("#wjxn_price").html("$ " + (parseInt(wjxn_price*100)/100).toLocaleString());
     return wjxn_price;
 }
 
