@@ -823,3 +823,13 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.top_btns {
+  flex-wrap: wrap;
+}
+.top_btns a svg {
+  width: 16px;
+}
+.top_btns a {
+  margin: 2px;
+}
