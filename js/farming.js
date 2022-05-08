@@ -172,7 +172,7 @@ async function get_user_farms() {
     if($("#results").length == 0) return;
     if(table_updating) return;
     table_updating = true;
-    get_wjxn_price();
+    await get_wjxn_price();
     try{
         let contract = new web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
         let ids = await callSmartContract(contract, "get_farm_ids", [accounts[0]]);
@@ -415,9 +415,7 @@ async function harvest(stake_id, btn) {
 
 
 async function get_wjxn_price() {
-    let _web3 = web3;
-    if(is_disconnected())
-        _web3 = new Web3(RPC_URL);
+    const _web3 = new Web3(RPC_URL);
     const jaxFarming = new _web3.eth.Contract(abis.jaxFarming, addresses.jaxFarming);
     const lpToken = new _web3.eth.Contract(abis.lpToken, addresses.lpToken);
     let [minimum_wjxn_price, reserves, token0] = await Promise.all([
