@@ -833,3 +833,9 @@ input[type=number] {
 .top_btns a {
   margin: 2px;
 }
+
+.top_btns .btn-warning:hover {
+  background: #fff;
+  color: #131b6a;
+  border: 1px solid #e6a633;
+}
