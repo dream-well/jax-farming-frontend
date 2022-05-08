@@ -812,3 +812,13 @@ footer a {
 footer a:hover {
   color: #fff !important;
 }
+
+.top_btns {
+  flex-wrap: wrap;
+}
+.top_btns a svg {
+  width: 11px;
+}
+.top_btns a {
+  margin: 2px;
+}
