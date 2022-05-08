@@ -44,7 +44,7 @@ async function stake_LP(btn) {
         onDone: () => $("#amount_LP").val("")
     });
     btn.disabled = false;
-    get_user_farms();
+    check_status();
 }
 
 async function stake_BUSD(btn) {
@@ -59,7 +59,7 @@ async function stake_BUSD(btn) {
         onDone: () => $("#amount_BUSD").val("")
     });
     btn.disabled = false;
-    get_user_farms();
+    check_status();
 }
 
 async function check_status() {
@@ -384,7 +384,7 @@ async function withdraw(stake_id, btn) {
     });
     btn.disabled = false;
     check_status();
-    get_user_farms();
+    // get_user_farms();
 }
 
 async function restake(stake_id, btn) {
@@ -397,7 +397,7 @@ async function restake(stake_id, btn) {
     });
     btn.disabled = false;
     check_status();
-    get_user_farms();
+    // get_user_farms();
 }
 
 async function harvest(stake_id, btn) {
