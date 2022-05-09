@@ -101,7 +101,9 @@ async function allowance_check() {
     let amountLP = $("#amount_LP").val();
     if(allowance1 == 0 || (amountBUSD && allowance1 < amountBUSD)) {
         $("#btn_approve_BUSD").show();
-        $("#btn_stake_BUSD").hide();
+        $("#btn_stake_BUSD").html("Stake");
+        $("#btn_stake_BUSD").show();
+        $("#btn_stake_BUSD").attr("disabled", true);
     }
     else {
         let btn_txt = "Stake";
@@ -117,7 +119,9 @@ async function allowance_check() {
     
     if(allowance2 == 0 || (amountLP && allowance2 < amountLP)) {
         $("#btn_approve_LP").show();
-        $("#btn_stake_LP").hide();
+        $("#btn_stake_LP").html("Stake");
+        $("#btn_stake_LP").show();
+        $("#btn_stake_LP").attr("disabled", true);
     }
     else {
         let btn_txt = "Stake";
