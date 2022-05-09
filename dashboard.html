@@ -150,25 +150,17 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12 mb-3" >
+                  <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
-                   
+                    <button style="display: none;" class="btn btn-info w-100" id="btn_approve_BUSD"
+                      onclick="approve_BUSD(this)">
+                      Approve
+                    </button>
+                    <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;"
+                      onclick="stake_BUSD(this)">
+                      Stake
+                    </button>
                   </div>
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-12 col-md-6">
-                        <button  class="btn btn-info w-100" id="btn_approve_BUSD" style="display: none;"  onclick="approve_BUSD(this)">
-                          Approve
-                        </button>
-                      </div>
-                      <div class="col-12 col-md-6">
-                        <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;" onclick="stake_BUSD(this)">
-                          Stake
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                 
                 </div>
               </div>
             </div>
@@ -206,15 +198,10 @@
                 <div class="row">
                   <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
-                   <div class="container">
-                     <div class="row">
-                       <div class="col-12 col-md-6"> <button class="btn btn-info w-100" id="btn_approve_LP" style="display: none;"
-                        onclick="approve_LP(this)">Approve</button>
-                      </div>
-                       <div class="col-12 col-md-6>"><button class="btn btn-info w-100" id="btn_stake_LP" style="display: none;"
-                        onclick="stake_LP(this)">Stake</button></div>
-                     </div>
-                   </div>
+                    <button class="btn btn-info w-100" id="btn_approve_LP" style="display: none;"
+                      onclick="approve_LP(this)">Approve</button>
+                    <button class="btn btn-info w-100" id="btn_stake_LP" style="display: none;"
+                      onclick="stake_LP(this)">Stake</button>
                   </div>
                 </div>
                 <hr>
