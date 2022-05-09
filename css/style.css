@@ -290,7 +290,7 @@ a.article, a.article:hover {
   flex: 1;
 }
 /* Switch 1 Specific Styles Start */
-.box_1 {}
+
 input[type="checkbox"].switch_1 {
   font-size: 30px;
   -webkit-appearance: none;
