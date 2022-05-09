@@ -36,7 +36,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand" href="index.html"><img src="img/jax-net_logo_blue.svg"  width="150"></a>
-      
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
           aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -45,7 +45,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ml-auto">
 
-            <a href="https://wrapped.jax.net/swap_hst.html" class="btn my-2 my-sm-0 mr-3 border-radius pt-2 pb-2 btn-info hst_swap">SWAP WJXN/HST</a>
+            <a href="https://wrapped.jax.net/swap_hst.html" target = "_blank" class="btn my-2 my-sm-0 mr-3 border-radius pt-2 pb-2 btn-info hst_swap">SWAP WJXN/HST</a>
             <div class="form-inline homeselect">
               <button class="btn btn-success border-radius mr-2 btn_connect" onclick="connect_wallet()">Connect a
                 wallet</button>
@@ -57,7 +57,7 @@
           </div>
         </div>
 
-    
+
     </div>
   </nav>
   <main role="main" class="bg-lighterblue">
@@ -152,7 +152,8 @@
                 <div class="row">
                   <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
-                    <button style="display: none;" class="btn btn-info w-100 mb-2" id="btn_approve_BUSD" onclick="approve_BUSD(this)">
+                    <button style="display: none;" class="btn btn-info w-100 mb-2" id="btn_approve_BUSD"
+                      onclick="approve_BUSD(this)">
                       Approve
                     </button>
                     <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;"
@@ -197,7 +198,7 @@
                 <div class="row">
                   <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
-                    <button class="btn btn-info w-100 mb-2" id="btn_approve_LP" style="display: none;"
+                    <button class="btn btn-info w-100" id="btn_approve_LP" style="display: none;"
                       onclick="approve_LP(this)">Approve</button>
                     <button class="btn btn-info w-100" id="btn_stake_LP" style="display: none;"
                       onclick="stake_LP(this)">Stake</button>
