@@ -34,16 +34,30 @@
 
 <body class="">
   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-    <div class="container-fluid"><a class="navbar-brand" href="index.html"><img src="img/jax-net_logo_blue.svg" width="150"></a>
-      <div class="ml-md-auto walllet_wrapr">
-        <div class="form-inline homeselect">
-          <button class="btn btn-success border-radius mr-2 btn_connect" onclick="connect_wallet()">Connect a wallet</button>
-          <select class="custom-select my-select chainSelector">
-            <option value="bscmainnet" selected="">Binance Smart Chain</option>
-            <option value="ethmainnet">Ethereum Chain</option>
-          </select>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html"><img src="img/jax-net_logo_blue.svg"  width="150"></a>
+      
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav ml-auto">
+
+            <a href="https://wrapped.jax.net/swap_hst.html" class="btn my-2 my-sm-0 mr-3 border-radius pt-2 pb-2 btn-info hst_swap">SWAP WJXN/HST</a>
+            <div class="form-inline homeselect">
+              <button class="btn btn-success border-radius mr-2 btn_connect" onclick="connect_wallet()">Connect a
+                wallet</button>
+              <select class="custom-select my-select chainSelector">
+                <option value="bscmainnet" selected="">Binance Smart Chain</option>
+                <!--  <option value="ethmainnet">Ethereum Chain</option>-->
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
+
+    
     </div>
   </nav>
   <main role="main" class="bg-lighterblue">
@@ -92,10 +106,11 @@
             <div class="alert-success border-radius p-3 box-shadow h-100">
               <div class="text-center">
                 <p class="pb-0 mb-0 text-lightblue"><small>Contract</small></p>
-                <a href="https://bscscan.com/address/0x069143Ad9C6E04172257324B6f9F7540b6f885aE" target="_blank" class="pb-0 mb-0 font-weight-bold text-blue">
+                <a href="https://bscscan.com/address/0xA581cb3883d84dAb7f1B1340fF01F1cB34A2B5d3" target="_blank"
+                  class="pb-0 mb-0 font-weight-bold text-blue">
                   <span id="contract_address">&nbsp;</span>
                   <span style="display: none;" id="jaxfarm_address"></span>
-                  &nbsp; 
+                  &nbsp;
                   <i class="fas fa-link copy_btn" data-id="jaxfarm_address"></i>
                 </a>
                 <p class="pb-0 mb-0 text-success"><small>Status</small></p>
@@ -111,13 +126,16 @@
               <div class="card p-4">
                 <h4 class="text-blue text-center pb-3">Stake with BUSD</h4>
                 <div class="stakeamt bg-lighterblue border-radius p-3">
-                  <p class="text-left text-blue pb-0 mb-0"><small>BUSD Balance: <span id="balance_BUSD">0</span></small></p>
+                  <p class="text-left text-blue pb-0 mb-0"><small>BUSD Balance: <span id="balance_BUSD">0</span></small>
+                  </p>
                   <div class="row d-flex">
-                    <div class="col-9 col-md-10 mb-3 mb-md-0">
-                      <input id="amount_BUSD" class="form-control enteramt form-control-lg w-100" type="number" placeholder="0.000"/>
+                    <div class="col-9 col-md-8 mb-3 mb-md-0">
+                      <input id="amount_BUSD" class="form-control enteramt form-control-lg w-100" type="number"
+                        placeholder="0.000" />
                     </div>
-                    <div class="col-3 col-md-2 text-md-right text-center my-auto">
-                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;" onclick="select_max_balance_BUSD()">Max</button>
+                    <div class="col-3 col-md-4 text-md-right text-center my-auto">
+                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;"
+                        onclick="select_max_balance_BUSD()">Max</button>
                     </div>
                   </div>
                 </div>
@@ -134,10 +152,12 @@
                 <div class="row">
                   <div class="col-12">
                     <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
-                    <button style="display: none;" class="btn btn-info w-100" id="btn_approve_BUSD" onclick="approve_BUSD(this)">
+                    <button style="display: none;" class="btn btn-info w-100" id="btn_approve_BUSD"
+                      onclick="approve_BUSD(this)">
                       Approve
                     </button>
-                    <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;" onclick="stake_BUSD(this)">
+                    <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;"
+                      onclick="stake_BUSD(this)">
                       Stake
                     </button>
                   </div>
@@ -145,20 +165,23 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-sm-12 col-md-2 pb-4 pb-sm-0 pb-md-0 my-auto text-center"><span class="orcl">OR</span>
+          <div class="col-12 col-sm-12 col-md-2 pb-4 pb-sm-0 pb-md-0 my-auto text-center midl_or"><span class="orcl">OR</span>
           </div>
           <div class="col-12 col-sm-12 col-md-5">
             <div class="profileandpool">
               <div class="card p-4">
                 <h4 class="text-blue text-center pb-3">Stake with LP Token</h4>
                 <div class="stakeamt bg-lighterblue border-radius p-3">
-                  <p class="text-left text-blue pb-0 mb-0"><small>LP Token Balance: <span id="balance_LP"></span></small></p>
+                  <p class="text-left text-blue pb-0 mb-0"><small>LP Token Balance: <span
+                        id="balance_LP"></span></small></p>
                   <div class="row d-flex">
-                    <div class="col-9 col-md-10 mb-3 mb-md-0">
-                      <input id="amount_LP" class="form-control enteramt form-control-lg w-100" type="number" placeholder="0.000"/>
+                    <div class="col-9 col-md-8 mb-3 mb-md-0">
+                      <input id="amount_LP" class="form-control enteramt form-control-lg w-100" type="number"
+                        placeholder="0.000" />
                     </div>
-                    <div class="col-3 col-md-2 text-md-right text-center my-auto">
-                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;" onclick="select_max_balance_LP()">Max</button>
+                    <div class="col-3 col-md-4 text-md-right text-center my-auto">
+                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;"
+                        onclick="select_max_balance_LP()">Max</button>
                     </div>
                   </div>
                 </div>
@@ -181,14 +204,25 @@
                       onclick="stake_LP(this)">Stake</button>
                   </div>
                 </div>
+                <hr>
+                <div class="row details_link">
+                  <div class="col-12">
+                    <a href="">GET LP Token <svg viewBox="0 0 24 24" color="primary" width="20px"
+                        xmlns="http://www.w3.org/2000/svg" class="ext_link_icon">
+                        <path
+                          d="M18 19H6C5.45 19 5 18.55 5 18V6C5 5.45 5.45 5 6 5H11C11.55 5 12 4.55 12 4C12 3.45 11.55 3 11 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V13C21 12.45 20.55 12 20 12C19.45 12 19 12.45 19 13V18C19 18.55 18.55 19 18 19ZM14 4C14 4.55 14.45 5 15 5H17.59L8.46 14.13C8.07 14.52 8.07 15.15 8.46 15.54C8.85 15.93 9.48 15.93 9.87 15.54L19 6.41V9C19 9.55 19.45 10 20 10C20.55 10 21 9.55 21 9V4C21 3.45 20.55 3 20 3H15C14.45 3 14 3.45 14 4Z">
+                        </path>
+                      </svg></a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <!--------stake--------->
-        <div class="container">
-          <div class="row">
-            <div class="col-12"> 
+        <div class="table_coins_wrap">
+          <div class="row table_coins_inner">
+            <div class="col-12">
               <!--- Table starts--->
               <div class="restable text-blue">
                 <div class="theader">
@@ -217,7 +251,8 @@
                   </div>
                   <div class="table_small order-4">
                     <div class="table_cell">Add to wallet</div>
-                    <div class="table_cell"><span onclick="add_to_wallet('wjxn')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                    <div class="table_cell"><span onclick="add_to_wallet('wjxn')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
                   </div>
                 </div>
                 <div class="table_row">
@@ -239,7 +274,8 @@
                   </div>
                   <div class="table_small order-4">
                     <div class="table_cell">Add to wallet</div>
-                    <div class="table_cell"><span onclick="add_to_wallet('busd')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                    <div class="table_cell"><span onclick="add_to_wallet('busd')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
                   </div>
                 </div>
                 <div class="table_row">
@@ -261,7 +297,8 @@
                   </div>
                   <div class="table_small order-4">
                     <div class="table_cell">Add to wallet</div>
-                    <div class="table_cell"><span onclick="add_to_wallet('lpToken')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                    <div class="table_cell"><span onclick="add_to_wallet('lpToken')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
                   </div>
                 </div>
                 <div class="table_row">
@@ -283,15 +320,16 @@
                   </div>
                   <div class="table_small order-4">
                     <div class="table_cell">Add to wallet</div>
-                    <div class="table_cell"><span onclick="add_to_wallet('hst')"><img style="width:25px;height:25px" src="img/metamask.svg" alt=""></span></div>
+                    <div class="table_cell"><span onclick="add_to_wallet('hst')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
                   </div>
                 </div>
               </div>
-              <!--- Table ends---> 
+              <!--- Table ends--->
             </div>
           </div>
         </div>
-        <!-- tab content --> 
+        <!-- tab content -->
         <!---- data table-->
         <div class="row bg-white border-radius ml-0 mr-0">
           <div class="p-md-3 p-2 col-12">
@@ -331,13 +369,17 @@
       <div class="row my-5">
         <div class="col-12 col-md-4  pb-3">
           <div> <img src="img/jax_logo_white.svg" width="100px">
-            <div class="social mt-3 pb-3"> 
-              <a href="https://www.facebook.com/network.jax/" target="_blank" class="p-2"><img src="img/facebook.svg" width="15px"></a>
-               <a href="https://twitter.com/communityjax" target="_blank" class="p-2"><img src="img/twitter.svg" width="15px"></a> 
-               <a href="https://ua.linkedin.com/company/jax-network" target="_blank" class="p-2"><img src="img/linkedin.svg" width="15px"></a> 
-               <a href="https://t.me/jax_chat" target="_blank" class="p-2"><img src="img/telegram.svg" width="15px"></a>
-               </div>
-            ©2022. Jax.Net</div>
+            <div class="social mt-3 pb-3">
+              <a href="https://www.facebook.com/network.jax/" target="_blank" class="p-2"><img src="img/facebook.svg"
+                  width="15px"></a>
+              <a href="https://twitter.com/communityjax" target="_blank" class="p-2"><img src="img/twitter.svg"
+                  width="15px"></a>
+              <a href="https://ua.linkedin.com/company/jax-network" target="_blank" class="p-2"><img
+                  src="img/linkedin.svg" width="15px"></a>
+              <a href="https://t.me/jax_chat" target="_blank" class="p-2"><img src="img/telegram.svg" width="15px"></a>
+            </div>
+            ©2022. Jax.Net
+          </div>
         </div>
         <!-- <div class="col-lg-3 pb-3">
           <h6>Product</h6>
@@ -347,7 +389,7 @@
           <a target="_blank" href="https://explore.jax.net">Exchange Agents</a><br>
         </div> -->
         <div class="col-lg-3 pb-3 te">
-          <h6 class="text-yellow" >Products</h6>
+          <h6 class="text-yellow">Products</h6>
           <a target="_blank" href="https://www.jax.network">Jax.Network</a><br>
           <a target="_blank" href="https://www.jax.net">Jax.Net</a><br>
           <a target="_blank" href="https://peacewallet.io/">Peace Wallet</a><br>
@@ -356,18 +398,18 @@
         </div>
         <div class="col-lg-3 pb-3">
           <h6 class="text-yellow">Policies</h6>
-          <a target="_blank" href="/terms.html">Terms of Service</a><br>
-          <a target="_blank" href="/privacy.html">Privacy Policy</a><br>
+          <a target="_blank" href="https://jax.net/terms-2/">Terms of Service</a><br>
+          <a target="_blank" href="https://jax.net/privacy/">Privacy Policy</a><br>
         </div>
         <div class="col-lg-2 pb-3">
           <h6 class="text-yellow">Support</h6>
           <a target="_blank" href="https://t.me/jax_chat">Join Telegram Chat</a><br>
-  
+
         </div>
       </div>
     </div>
-    
-    <!-- /.container --> 
+
+    <!-- /.container -->
   </footer>
 
   <!--Modal starts-->
@@ -602,7 +644,7 @@
 
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js">
-  </script>
+    </script>
 
   <script type="text/javascript">
     $(document).ready(function () {
@@ -639,17 +681,18 @@
       });
 
 
-      // document ready  
+      // document ready
     });
   </script>
-<!-- Start of LiveChat (www.livechat.com) code -->
-<script>
-  window.__lc = window.__lc || {};
-  window.__lc.license = 14104953;
-  ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
-</script>
-<noscript><a href="https://www.livechat.com/chat-with/14104953/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
-<!-- End of LiveChat code -->
+  <!-- Start of LiveChat (www.livechat.com) code -->
+  <script>
+    window.__lc = window.__lc || {};
+    window.__lc.license = 14104953;
+    ; (function (n, t, c) { function i(n) { return e._h ? e._h.apply(null, n) : e._q.push(n) } var e = { _q: [], _h: null, _v: "2.0", on: function () { i(["on", c.call(arguments)]) }, once: function () { i(["once", c.call(arguments)]) }, off: function () { i(["off", c.call(arguments)]) }, get: function () { if (!e._h) throw new Error("[LiveChatWidget] You can't use getters before load."); return i(["get", c.call(arguments)]) }, call: function () { i(["call", c.call(arguments)]) }, init: function () { var n = t.createElement("script"); n.async = !0, n.type = "text/javascript", n.src = "https://cdn.livechatinc.com/tracking.js", t.head.appendChild(n) } }; !n.__lc.asyncInit && e.init(), n.LiveChatWidget = n.LiveChatWidget || e }(window, document, [].slice))
+  </script>
+  <noscript><a href="https://www.livechat.com/chat-with/14104953/" rel="nofollow">Chat with us</a>, powered by <a
+      href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
+  <!-- End of LiveChat code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.2-rc.0/web3.min.js"
     integrity="sha512-REWiGZVmhU2S5eIov/DuNrsq4djWnPaAHSvXrbLLLaI0r/gW+wh1utIzxt0iB4IQLgXhNDj5mR0YMBjrkKhVMA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -659,7 +702,7 @@
   <script src="js/contracts.js?v2"></script>
   <script src="js/util.js"></script>
   <script src="js/farming.js"></script>
-  <script src="js/wallet.js?v3"></script>
+  <script src="js/wallet.js?v5"></script>
 </body>
 
 </html>
