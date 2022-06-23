@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -27,21 +28,38 @@
     rel="stylesheet">
   <!-- Font Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <!-- Bootstrap Data Table -->
+  <link href="css/responsive.bootstrap4.css" rel="stylesheet">
+  <link href="css/dataTables.bootstrap4.css" rel="stylesheet">
+  <script src="js/mixpanel.js"></script>
 </head>
 
 <body class="">
   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-    <div class="container-fluid"><a class="navbar-brand" href="#"><img src="img/jax-net_logo_blue.svg" width="150"></a>
-      <div class="ml-md-auto">
-        <div class="form-inline homeselect">
-          <a href="#" class="btn btn-primary border-radius btn_connect mr-2 btn_connect"
-            onclick="connect_wallet()">Connect a wallet </a>
-          <select class="custom-select my-select chainSelector">
-            <option value="bsc" selected>Binance Smart Chain</option>
-            <!-- <option value="ethmainnet">Ethereum Chain</option> -->
-          </select>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html"><img src="img/jax-net_logo_blue.svg"  width="150"></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav ml-auto">
+
+            <a href="https://wrapped.jax.net/swap_hst.html" target = "_blank" class="btn my-2 my-sm-0 mr-3 border-radius pt-2 pb-2 btn-info hst_swap mix_9">SWAP WJXN/HST</a>
+            <div class="form-inline homeselect">
+              <button class="btn btn-success border-radius mr-2 btn_connect mix_10" onclick="connect_wallet()">Connect a
+                wallet</button>
+              <select class="custom-select my-select chainSelector">
+                <option value="bscmainnet" selected="">Binance Smart Chain</option>
+                <!--  <option value="ethmainnet">Ethereum Chain</option>-->
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
+
+
     </div>
   </nav>
   <main role="main" class="bg-lighterblue">
@@ -49,283 +67,350 @@
     <!--3boxes with icons end-->
     <section class="py-5">
       <div class="container">
-        <div class="row mb-5 d-flex">
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+        <div class="row mb-5 flex flex-row">
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
-                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool amount</small></p>
-                <p class="text-blue pb-0 mb-0 font-weight-bold">10000000 HST</p>
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward pool</small></p>
+                <p class="text-blue pb-0 mb-0 font-weight-bold"><span id="hst_balance">-</span> HST</p>
+                <p class="text-blue pb-0 mb-0" id="hst_balance_usd"></p>
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
               <div class="text-center">
-                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Reward percentage</small></p>
-                <p class="text-blue pb-0 mb-0 font-weight-bold">30%</p>
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Today's Reward percentage</small></p>
+                <p class="text-blue pb-0 mb-0 font-weight-bold" id="apy_today">-%</p>
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
+          <div class="col-12 col-md mb-3 mb-md-0">
             <div class="bg-white border-radius p-3 box-shadow h-100">
+              <div class="text-center">
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Your stake</small></p>
+                <p class="text-blue pb-0 mb-0 font-weight-bold" id="total_staked">0</p>
+                <p class="text-blue pb-0 mb-0" id="total_staked_usd">$ 0</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md mb-3 mb-md-0">
+            <div class="bg-white border-radius p-3 box-shadow h-100">
+              <div class="text-center">
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>WJXN DEX price</small></p>
+                <p class="text-blue pb-0 mb-0 font-weight-bold" id="wjxn_dex_price">$ -</p>
+                <p class="text-lightblue pb-0 mb-0 text-uppercase"><small>Our WJXN price</small></p>
+                <p class="text-blue pb-0 mb-0" id="wjxn_price">$ -</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md mb-3 mb-md-0">
+            <div class="alert-success border-radius p-3 box-shadow h-100">
               <div class="text-center">
                 <p class="pb-0 mb-0 text-lightblue"><small>Contract</small></p>
-                <a href="#" class="text-blue">
+                <a href="https://bscscan.com/address/0xA581cb3883d84dAb7f1B1340fF01F1cB34A2B5d3" target="_blank"
+                  class="pb-0 mb-0 font-weight-bold text-blue">
                   <span id="contract_address">&nbsp;</span>
                   <span style="display: none;" id="jaxfarm_address"></span>
-                  &nbsp; 
+                  &nbsp;
+                  <i class="fas fa-link copy_btn" data-id="jaxfarm_address"></i>
                 </a>
-                <i class="far fa-clone copy_btn text-blue" data-id="jaxfarm_address"></i>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-3 mb-3 mb-md-0">
-            <div class="alert-danger border-radius p-3 box-shadow h-100">
-              <div class="text-center">
-                <p class="pb-0 mb-0 text-danger"><small>Status</small></p>
-                <p class="pb-0 mb-0 text-danger font-weight-bold">No Active</p>
+                <p class="pb-0 mb-0 text-success"><small>Status</small></p>
+                <p class="pb-0 mb-0 text-success font-weight-bold">Active</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="d-flex justify-content-center">
-          <div class="col-9 justify-content-center flex-column ">
-            <!---Account starts--->
-            <div class="col-12 ">
-              <!--- Tabs starts-->
-              <div class="profileandpool">
-                <div class="card p-4">
-
-                  <div class="card-body p-0">
-                    <!-- Tab panes -->
-                    <div class="tab-content text-center">
-                      <div class="tab-pane active" id="home" role="tabpanel">
-                        <div class="innertabs">
-                          <!--------inner tabs1 start--------->
-                          <ul class="nav nav-tabs justify-content-center" role="tablist">
-                            <h4 class="text-blue font-weight-bold" style="display: block;
-                width: 100%;"> Stake</h4>
-                            <li class="nav-item">
-                              <a class="nav-link active show" data-toggle="tab" href="#menu1">BUSD</a>
-
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" data-toggle="tab" href="#menu2">LP Token</a>
-                            </li>
-                          </ul>
-
-                          <!-- Tab panes -->
-                          <div class="tab-content">
-
-                            <div id="menu1" class="tab-pane active">
-                              <!----Stake starts----->
-                              <div class="d-flex justify-content-center pt-4">
-                                <div class="col-12 pl-0 pr-0">
-
-                                  <div class="stakeamt bg-lighterblue border-radius p-3">
-                                    <div class="text-left text-blue font-weight-bold">Stake BUSD</div>
-                                    <p class="text-left text-blue pb-0 mb-0"><small>BUSD Balance: <span
-                                          id="balance_BUSD">0</span></small></p>
-                                    <div class="row d-flex">
-                                      <div class="col-9 col-md-9 mb-3 mb-md-0"><input id="amount_BUSD"
-                                          class="form-control enteramt form-control-lg w-100" type="text"
-                                          placeholder="0.000"></div>
-                                      <div class="col-3 col-md-3 text-md-right text-center my-auto"><button
-                                          onclick="select_max_balance_BUSD()"
-                                          class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1"
-                                          style="font-size: 16px;">Max</button></div>
-                                    </div>
-                                  </div>
-                                  <p class="text-muted"><small>Min 500 BUSD to 50000 BUSD</small></p>
-                                  <!-- <div class="text-center py-2 text-blue font-weight-bold">OR</div> -->
-
-
-                                  <div class="bg-light border-radius p-3 text-grey text-left mb-3">
-                                    <div class="d-flex">
-                                      <div class="my-auto mr-3"><i class="fas fa-unlock"></i></div>
-
-                                      <div>
-                                        <h5 class="pb-0 mb-0">Min Locking Period: 120 days</h5>
-                                        <p class="pb-0 mb-0"><small>Your Withdrawl date is: <br />14 April 2022,
-                                            20:26:05</small></p>
-                                      </div>
-                                    </div>
-
-
-                                  </div>
-                                  <div class="row">
-
-                                    <div class="col-12">
-                                      <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect
-                                        a wallet</button>
-                                      <button style="display: none;" class="btn btn-info w-100" id="btn_approve_BUSD"
-                                        onclick="approve_BUSD()">Approve</button></div>
-                                    <button class="btn btn-info w-100" id="btn_stake_BUSD" style="display: none;"
-                                      onclick="stake_BUSD()">Stake</button>
-
-                                  </div>
-
-                                </div>
-
-                              </div>
-                              <!---- Stake Ends----->
-
-
-                            </div>
-                            <div id="menu2" class=" tab-pane fade">
-                              <!----Withdraw starts----->
-                              <!---- Withdraw Ends----->
-                              <!-- LP TOKEn -->
-                              <div class="d-flex justify-content-center pt-4">
-                                <div class="col-12 pl-0 pr-0">
-                                  <div class="stakeamt bg-lighterblue border-radius p-3">
-                                    <div class="text-left text-blue font-weight-bold">Stake LP Token</div>
-                                    <p class="text-left text-blue pb-0 mb-0"><small>LP Token Balance: <span
-                                          id="balance_LP">0</span></small></p>
-
-                                    <div class="row d-flex">
-                                      <div class="col-9 col-md-9 mb-3 mb-md-0"><input id="amount_LP"
-                                          class="form-control enteramt form-control-lg w-100" type="text"
-                                          placeholder="0.000"></div>
-                                      <div class="col-3 col-md-3 text-md-right text-center my-auto"><button
-                                          onclick="select_max_balance_LP()"
-                                          class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1"
-                                          style="font-size: 16px;">Max</button></div>
-                                    </div>
-                                  </div>
-                                  <p class="text-muted"><small>Min 500 LP Tokens to 50000 LP Tokens</small></p>
-
-                                  <div class="bg-light border-radius p-3 text-grey text-left mb-3">
-                                    <div class="d-flex">
-                                      <div class="my-auto mr-3"><i class="fas fa-unlock"></i></div>
-
-                                      <div>
-                                        <h5 class="pb-0 mb-0">Min Locking Period: 120 days</h5>
-                                        <p class="pb-0 mb-0"><small>Your Withdrawl date is: <br />14 April 2022,
-                                            20:26:05</small></p>
-                                      </div>
-                                    </div>
-
-
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-12">
-                                      <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect
-                                        a wallet</button>
-                                      <button class="btn btn-info w-100" id="btn_approve_LP" style="display: none;"
-                                        onclick="approve_LP()">Approve</button>
-                                      <button class="btn btn-info w-100" id="btn_stake_LP" style="display: none;"
-                                        onclick="stake_LP()">Stake</button>
-                                    </div>
-
-                                  </div>
-
-                                </div>
-
-                              </div>
-                              <!-- LP TOKEn -->
-                            </div>
-                          </div>
-                          <!-------------inner tabs 1 ends---------------->
-                        </div>
-                      </div>
-
+        <!--------stake--------->
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-5">
+            <div class="profileandpool">
+              <div class="card p-4">
+                <h4 class="text-blue text-center pb-3">Stake with BUSD</h4>
+                <div class="stakeamt bg-lighterblue border-radius p-3">
+                  <p class="text-left text-blue pb-0 mb-0"><small>BUSD Balance: <span id="balance_BUSD">0</span></small>
+                  </p>
+                  <div class="row d-flex">
+                    <div class="col-9 col-md-8 mb-3 mb-md-0">
+                      <input id="amount_BUSD" class="form-control enteramt form-control-lg w-100" type="number"
+                        placeholder="0.000" />
+                    </div>
+                    <div class="col-3 col-md-4 text-md-right text-center my-auto">
+                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;"
+                        onclick="select_max_balance_BUSD()">Max</button>
                     </div>
                   </div>
                 </div>
-
+                <div class="bg-light border-radius p-3 text-grey text-left mb-3">
+                  <div class="d-flex">
+                    <div class="my-auto mr-3"><i class="fas fa-unlock"></i></div>
+                    <div>
+                      <h5 class="pb-0 mb-0">Lock-in Period: 120 days</h5>
+                      <p class="pb-0 mb-0"><small>Your Withdrawal date is: <br>
+                          <span class="withdrawal_date"></span></small></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
+                    <button style="display: none;" class="btn btn-info w-100 mb-2" id="btn_approve_BUSD"
+                      onclick="approve_BUSD(this)">
+                      Approve
+                    </button>
+                    <button class="btn btn-info w-100 mix_11" id="btn_stake_BUSD" style="display: none;"
+                      onclick="stake_BUSD(this)">
+                      Stake
+                    </button>
+                  </div>
+                </div>
               </div>
-              <!--- Tabs ends-->
             </div>
-            <!---Account Ends--->
-            <!--- Rewards starts--->
+          </div>
+          <div class="col-12 col-sm-12 col-md-2 pb-4 pb-sm-0 pb-md-0 my-auto text-center midl_or"><span class="orcl">OR</span>
+          </div>
+          <div class="col-12 col-sm-12 col-md-5">
+            <div class="profileandpool">
+              <div class="card p-4">
+                <h4 class="text-blue text-center pb-3">Stake with LP Token</h4>
+                <div class="stakeamt bg-lighterblue border-radius p-3">
+                  <p class="text-left text-blue pb-0 mb-0"><small>LP Token Balance: <span
+                        id="balance_LP"></span></small></p>
+                  <div class="row d-flex">
+                    <div class="col-9 col-md-8 mb-3 mb-md-0">
+                      <input id="amount_LP" class="form-control enteramt form-control-lg w-100" type="number"
+                        placeholder="0.000" />
+                    </div>
+                    <div class="col-3 col-md-4 text-md-right text-center my-auto">
+                      <button class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;"
+                        onclick="select_max_balance_LP()">Max</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-light border-radius p-3 text-grey text-left mb-3">
+                  <div class="d-flex">
+                    <div class="my-auto mr-3"><i class="fas fa-unlock"></i></div>
+                    <div>
+                      <h5 class="pb-0 mb-0">Lock-in Period: 120 days</h5>
+                      <p class="pb-0 mb-0"><small>Your Withdrawal date is: <br>
+                          <span class="withdrawal_date"></span></small></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <button class="btn btn-info w-100 btn_connects" onclick="connect_wallet()">Connect a wallet</button>
+                    <button class="btn btn-info w-100" id="btn_approve_LP" style="display: none;"
+                      onclick="approve_LP(this)">Approve</button>
+                    <button class="btn btn-info w-100 mix_12" id="btn_stake_LP" style="display: none;"
+                      onclick="stake_LP(this)">Stake</button>
+                  </div>
+                </div>
+                <hr>
+                <div class="row details_link">
+                  <div class="col-12">
+                    <a target="_blank" href="https://pancakeswap.finance/add/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56/0xcA1262e77Fb25c0a4112CFc9bad3ff54F617f2e6">GET LP Token <svg viewBox="0 0 24 24" color="primary" width="20px"
+                        xmlns="http://www.w3.org/2000/svg" class="ext_link_icon">
+                        <path
+                          d="M18 19H6C5.45 19 5 18.55 5 18V6C5 5.45 5.45 5 6 5H11C11.55 5 12 4.55 12 4C12 3.45 11.55 3 11 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V13C21 12.45 20.55 12 20 12C19.45 12 19 12.45 19 13V18C19 18.55 18.55 19 18 19ZM14 4C14 4.55 14.45 5 15 5H17.59L8.46 14.13C8.07 14.52 8.07 15.15 8.46 15.54C8.85 15.93 9.48 15.93 9.87 15.54L19 6.41V9C19 9.55 19.45 10 20 10C20.55 10 21 9.55 21 9V4C21 3.45 20.55 3 20 3H15C14.45 3 14 3.45 14 4Z">
+                        </path>
+                      </svg></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--------stake--------->
+        <div class="table_coins_wrap">
+          <div class="row table_coins_inner">
             <div class="col-12">
-              <!--- Tabs starts-->
-              <div class="profileandpool">
-                <div class="card p-4">
-
-                  <div class="card-body p-0">
-                    <!-- Tab panes -->
-                    <div class="tab-content text-center">
-
-                      <div class="tab-pane active" id="profile" role="tabpanel">
-                        <div class="innertabs">
-                          <!--------inner tabs2 start--------->
-                          <h4 class="text-blue font-weight-bold">My Farms</h4>
-
-                          <!-- Tab panes -->
-                          <div class="tab-content">
-
-
-                            <div id="menu4" class="container active tab-pane"><br>
-                              <!-----Subscrptions available---->
-                              <div class="row">
-                                <div class="col-12" id="farms">
-
-
-                                </div>
-                              </div>
-                              <!----Subscriptions available---->
-                            </div>
-                          </div>
-                          <!-------------inner tabs 2 ends---------------->
-                        </div>
-                      </div>
-
-                    </div>
+              <!--- Table starts--->
+              <div class="restable text-blue">
+                <div class="theader">
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Network</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Currency</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Name</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Address</div>
+                  <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Add to wallet</div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
                   </div>
-                  <!-- <div class="row justify-content-center">
-                    <div class="col-6"><a href="#" class="btn btn-light w-100">MORE</a></div>
-
-                  </div> -->
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">WJXN</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">Wrapped Jaxnet</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="wjxn_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('wjxn')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">BUSD</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">BUSD Token</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="busd_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('busd')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">WJXN-LP</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">Pancake LPs (WJXN/BUSD)</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="lpToken_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('lpToken')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+                <div class="table_row">
+                  <div class="table_small order-5">
+                    <div class="table_cell">Network</div>
+                    <div class="table_cell"><img style="width:25px;height:25px" src="img/binance.svg" alt=""> BSC</div>
+                  </div>
+                  <div class="table_small order-5">
+                    <div class="table_cell">Currency</div>
+                    <div class="table_cell">HST</div>
+                  </div>
+                  <div class="table_small order-2">
+                    <div class="table_cell">Name</div>
+                    <div class="table_cell text-blue">Haber-Stornetta Token</div>
+                  </div>
+                  <div class="table_small order-3">
+                    <div class="table_cell">Address</div>
+                    <div class="table_cell" id="hst_address"></div>
+                  </div>
+                  <div class="table_small order-4">
+                    <div class="table_cell">Add to wallet</div>
+                    <div class="table_cell"><span onclick="add_to_wallet('hst')"><img style="width:25px;height:25px"
+                          src="img/metamask.svg" alt=""></span></div>
+                  </div>
+                </div>
+              </div>
+              <!--- Table ends--->
+            </div>
+          </div>
+        </div>
+        <!-- tab content -->
+        <!---- data table-->
+        <div class="row bg-white border-radius ml-0 mr-0">
+          <div class="p-md-3 p-2 col-12">
+            <h3 class="text-blue">My Farms</h3>
+            <form>
+              <div class="form-row align-items-center text-blue">
+                <div class="col-auto my-1">
+                  <label class="mr-sm-2" for="inlineFormCustomSelect">Search By</label>
+                  <select class="custom-select mr-sm-2" id="filter" onchange="render_table()">
+                    <option value="0" selected>All</option>
+                    <option value="1">Locked</option>
+                    <option value="2">Unlocked</option>
+                    <option value="3">Withdrawn</option>
+                  </select>
                 </div>
 
               </div>
-              <!--- Tabs ends-->
+            </form>
+            <div class="restable text-blue" id="results">
+              <div class="theader">
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Farm ID</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Lp token</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">APR</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Yield</div>
+                <div class="table_header pt-md-3 pb-md-3 pt-1 pb-1 pl-2">Status</div>
+              </div>
             </div>
-            <!--- Rewards Ends--->
+
+            <!---- data table-->
           </div>
         </div>
-
       </div>
     </section>
   </main>
   <footer class="py-5 bg-blue text-white">
     <div class="container">
-      <div class="row justify-content-between my-5">
-        <div class="col-12 col-md-4 pb-3">
-          <div> <img src="img/jax-net_logo_white.svg" class="pb-3" width="100px">
-            <p class="text-white">Jax.Net is creating products for miners, blockchain developers and cryptocurrency
-              users based on the Jax.Netw blockchain platform.</p>
+      <div class="row my-5">
+        <div class="col-12 col-md-4  pb-3">
+          <div> <img src="img/jax_logo_white.svg" width="100px">
+            <div class="social mt-3 pb-3">
+              <a href="https://www.facebook.com/network.jax/" target="_blank" class="p-2"><img src="img/facebook.svg"
+                  width="15px"></a>
+              <a href="https://twitter.com/communityjax" target="_blank" class="p-2"><img src="img/twitter.svg"
+                  width="15px"></a>
+              <a href="https://ua.linkedin.com/company/jax-network" target="_blank" class="p-2"><img
+                  src="img/linkedin.svg" width="15px"></a>
+              <a href="https://t.me/jax_chat" target="_blank" class="p-2"><img src="img/telegram.svg" width="15px"></a>
+            </div>
+            ©2022. Jax.Net
           </div>
         </div>
-        <div class="col-12 col-md-3 pb-3">
-          <h6 class="text-yellow">Menu</h6>
-          <a target="_blank" class="text-white" href="#">Mining Pool</a><br>
-          <a target="_blank" class="text-white" href="#">Transfer Hub</a><br>
-          <a target="_blank" class="text-white" href="#">Blockchain Explorer & API</a><br>
-          <a target="_blank" class="text-white" href="#">Wallet</a><br>
+        <!-- <div class="col-lg-3 pb-3">
+          <h6>Product</h6>
+          <a target="_blank" href="https://explore.jax.net">Explorer</a><br>
+          <a target="_blank" href="https://www.jax.network">Statistics</a><br>
+          <a target="_blank" href="https://api.mine.jax.net">API</a><br>
+          <a target="_blank" href="https://explore.jax.net">Exchange Agents</a><br>
+        </div> -->
+        <div class="col-lg-3 pb-3 te">
+          <h6 class="text-yellow">Products</h6>
+          <a target="_blank" href="https://www.jax.network">Jax.Network</a><br>
+          <a target="_blank" href="https://www.jax.net">Jax.Net</a><br>
+          <a target="_blank" href="https://peacewallet.io/">Peace Wallet</a><br>
+          <a target="_blank" href="https://jaxwallet.io/">Jax.Money Wallet</a><br>
+          <a target="_blank" href="https://api.mine.jax.net">Mining API</a><br>
         </div>
-        <div class=" col-12 col-md-3 pb-3">
-          <h6 class="text-yellow">More Info</h6>
-          <a target="_blank" class="text-white" href="#">Contacts</a><br>
-          <a target="_blank" class="text-white" href="#">News</a><br>
-          <a target="_blank" class="text-white" href="#">Jax.Network</a>
+        <div class="col-lg-3 pb-3">
+          <h6 class="text-yellow">Policies</h6>
+          <a target="_blank" href="https://jax.net/terms-2/">Terms of Service</a><br>
+          <a target="_blank" href="https://jax.net/privacy/">Privacy Policy</a><br>
         </div>
+        <div class="col-lg-2 pb-3">
+          <h6 class="text-yellow">Support</h6>
+          <a target="_blank" href="https://t.me/jax_chat">Join Telegram Chat</a><br>
 
-      </div>
-      <div class="row d-flex">
-        <div class="col-12 col-md-6 my-auto text-center text-md-left">©2021. JAX Net. All rights reserved </div>
-        <div class="col-12 col-md-6 text-center text-md-right">
-          <div class="social mt-3 pb-3"> <a href="#" target="_blank" class="p-2"><img src="img/facebook.svg"
-                width="15px" /></a> <a href="#" target="_blank" class="p-2"><img src="img/twitter.svg"
-                width="15px" /></a> <a href="#" target="_blank" class="p-2"><img src="img/linkedin.svg"
-                width="15px" /></a> <a href="#" target="_blank" class="p-2"><img src="img/telegram.svg"
-                width="15px" /></a> </div>
         </div>
-
       </div>
     </div>
+
     <!-- /.container -->
   </footer>
 
@@ -347,18 +432,14 @@
             <div class="col-12">
               <div class="text-blue border border-radius p-3 mb-3">
                 <div class="row mb-3">
-                  <div class="col-8 text-left">
-                    <h5>Farm ID</h5>
-                    <p><small>1</small></p>
+                  <div class="col-2 text-left"><img src="img/user.png"></div>
+                  <div class="col-8">
+                    <h5>10,00,000HST</h5>
+                    <p><small>Reward Pool</small></p>
                   </div>
-
                   <div class="col-2 text-left">Live <i class="fas fa-circle text-success"></i></div>
                 </div>
                 <div class="row mb-3">
-                  <div class="col-12">
-                    <h5>10,00,000 $</h5>
-                    <p><small>Total Yield</small></p>
-                  </div>
                   <div class="col-12">
                     <div class="rewardtable">
                       <table class="table text-blue">
@@ -366,34 +447,17 @@
                         <tbody>
 
                           <tr>
-                            <th scope="row">My stake</th>
+                            <th scope="row">Pool Balance</th>
                             <td class="text-right">0 HST</td>
                           </tr>
                           <tr>
-                            <th scope="row">BUSD value </th>
+                            <th scope="row">Remaining blocks</th>
                             <td class="text-right">78667</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Total reward </th>
-                            <td class="text-right">14410351</td>
                           </tr>
                           <tr>
                             <th scope="row"><strong>Contract</strong></th>
                             <td class="text-right"><a href="#" class="text-blue">0x293..896 <span class="ml-2"><i
                                     class="far fa-clone"></i></span></a></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Start date and time </th>
-                            <td class="text-right">14294329</td>
-                          </tr>
-
-                          <tr>
-                            <th scope="row">End date and time</th>
-                            <td class="text-right">14488945</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Pending reward</th>
-                            <td class="text-right">14488945</td>
                           </tr>
                         </tbody>
                       </table>
@@ -401,7 +465,7 @@
                   </div>
                 </div>
 
-                <!-- 
+
                 <div class="row mb-3">
                   <div class="col-12">
                     <p class="font-weight-bold">Block info</p>
@@ -410,16 +474,16 @@
 
                         <tbody>
                           <tr>
-                            <th scope="row">Total reward                            </th>
+                            <th scope="row">Current block</th>
                             <td class="text-right">14410351</td>
                           </tr>
                           <tr>
-                            <th scope="row">Start date and time                            </th>
+                            <th scope="row">Start block</th>
                             <td class="text-right">14294329</td>
                           </tr>
 
                           <tr>
-                            <th scope="row">End date and time</th>
+                            <th scope="row">End block</th>
                             <td class="text-right">14488945</td>
                           </tr>
 
@@ -427,7 +491,7 @@
                       </table>
                     </div>
                   </div>
-                </div> -->
+                </div>
 
 
               </div>
@@ -435,7 +499,7 @@
 
 
                 <div class="row mb-3">
-                  <div class="col-12">Pending Yield</div>
+                  <div class="col-12">Harvestable</div>
                   <div class="col-12">
                     <div class="bg-light p-3 border-radius"><i class="fas fa-leaf mr-2"></i> <span>0 HST</span> <a
                         href="#" class="btn btn-info
@@ -538,15 +602,15 @@
           </button>
         </div>
         <div class="modal-body">
-          <!-- <div class="stakeamt bg-lighterblue border-radius p-3">
-            <p class="text-right text-blue pb-0 mb-0"><small>BUSD Balance: <span id="balance_BUSD">0</span></small></p>
+          <div class="stakeamt bg-lighterblue border-radius p-3">
+            <p class="text-right text-blue pb-0 mb-0"><small>BUSD Balance: 0</small></p>
             <div class="row d-flex">
               <div class="col-9 col-md-6 mb-3 mb-md-0"><input class="form-control enteramt form-control-lg w-100"
                   type="text" placeholder="0.000"></div>
-              <div class="col-3 col-md-6 text-md-right text-center my-auto"><button onclick="select_max_balance_BUSD()"
-                  class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;">Max</button></div>
+              <div class="col-3 col-md-6 text-md-right text-center my-auto"><a href="#"
+                  class="btn btn-light btn-lg pl-2 pr-2 pt-1 pb-1" style="font-size: 16px;">Max</a></div>
             </div>
-          </div> -->
+          </div>
           <p class="text-muted text-center"><small>You will get: 1233 LP Token</small></p>
           <div class="row">
             <div class="col-6"><a href="#" class="btn btn-info w-100">Buy LP Token</a></div>
@@ -563,22 +627,26 @@
   <!-- Bootstrap core JavaScript
     ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-  </script>
-  <script src="js/holder.min.js"></script>
+  <!-- <script src="js/vendor/popper.min.js"></script> -->
+  <script src="js/bootstrap.min.js"></script>
+  <!-- <script src="js/vendor/holder.min.js"></script> -->
   <script src="js/offcanvas.js"></script>
+  <!---scroll bar---->
+  <script>
+    if ('ontouchstart' in window) {
+      document.body.classList.add('touch-device');
+    }
+  </script>
+  <!---scroll bar---->
   <!--- FOR VIDEO--->
 
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js">
-  </script>
+    </script>
 
   <script type="text/javascript">
     $(document).ready(function () {
@@ -599,14 +667,34 @@
       });
     });
   </script>
+  <!-----------------for harvest--------------->
+
+  <script>
+    $(document).ready(function () {
+
+
+      $('[data-toggle="collapse"]').click(function () {
+        $(this).toggleClass("active");
+        if ($(this).hasClass("active")) {
+          // $(this).text("Hide");
+        } else {
+          //$(this).text("Show");
+        }
+      });
+
+
+      // document ready
+    });
+  </script>
   <!-- Start of LiveChat (www.livechat.com) code -->
-<script>
-  window.__lc = window.__lc || {};
-  window.__lc.license = 14104953;
-  ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
-</script>
-<noscript><a href="https://www.livechat.com/chat-with/14104953/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
-<!-- End of LiveChat code -->
+  <script>
+    window.__lc = window.__lc || {};
+    window.__lc.license = 14104953;
+    ; (function (n, t, c) { function i(n) { return e._h ? e._h.apply(null, n) : e._q.push(n) } var e = { _q: [], _h: null, _v: "2.0", on: function () { i(["on", c.call(arguments)]) }, once: function () { i(["once", c.call(arguments)]) }, off: function () { i(["off", c.call(arguments)]) }, get: function () { if (!e._h) throw new Error("[LiveChatWidget] You can't use getters before load."); return i(["get", c.call(arguments)]) }, call: function () { i(["call", c.call(arguments)]) }, init: function () { var n = t.createElement("script"); n.async = !0, n.type = "text/javascript", n.src = "https://cdn.livechatinc.com/tracking.js", t.head.appendChild(n) } }; !n.__lc.asyncInit && e.init(), n.LiveChatWidget = n.LiveChatWidget || e }(window, document, [].slice))
+  </script>
+  <noscript><a href="https://www.livechat.com/chat-with/14104953/" rel="nofollow">Chat with us</a>, powered by <a
+      href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
+  <!-- End of LiveChat code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.2-rc.0/web3.min.js"
     integrity="sha512-REWiGZVmhU2S5eIov/DuNrsq4djWnPaAHSvXrbLLLaI0r/gW+wh1utIzxt0iB4IQLgXhNDj5mR0YMBjrkKhVMA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -616,9 +704,7 @@
   <script src="js/contracts.js?v2"></script>
   <script src="js/util.js"></script>
   <script src="js/farming.js"></script>
-  <script src="js/wallet.js?v3"></script>
-  <!-----------------for harvest--------------->
-
+  <script src="js/wallet.js?v5"></script>
 </body>
 
 </html>
